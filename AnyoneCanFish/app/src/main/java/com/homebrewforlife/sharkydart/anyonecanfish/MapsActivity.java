@@ -22,7 +22,7 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private int RC_SIGN_IN = -99;   //request code
+    private int RC_SIGN_IN = 0;   //request code
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.GitHubBuilder().build());
+                new AuthUI.IdpConfig.GoogleBuilder().build());
 
 // Create and launch sign-in intent
         startActivityForResult(
