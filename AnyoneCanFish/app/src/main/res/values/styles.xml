@@ -8,4 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Theme.AnyoneCanFish" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/paper_500</item>
+        <item name="colorPrimaryDark">@color/paper_700</item>
+        <item name="colorAccent">@color/ink_a200</item>
+    </style>
+
+    <style name="Theme.AnyoneCanFish.Detail">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

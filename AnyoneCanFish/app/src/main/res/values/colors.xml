@@ -3,4 +3,11 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="photo_placeholder">#b9679a</color>
+    <color name="paper_300">#ded0a5</color>
+    <color name="paper_500">#c1a07f</color>
+    <color name="paper_700">#8b6e52</color>
+    <color name="ink_a200">#564c80</color>
+    <color name="ink_a800">#2b205c</color>
 </resources>
