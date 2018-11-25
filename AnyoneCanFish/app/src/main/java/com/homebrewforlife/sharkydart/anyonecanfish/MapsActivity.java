@@ -30,76 +30,17 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private int RC_SIGN_IN = 0;   //request code
-    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        mContext = this;
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if(mapFragment != null)
             mapFragment.getMapAsync(this);
 
-        //immediately try to sign the user in via FirebaseUI
-        FirebaseSignIn();
-    }
-
-    private void FirebaseSignOut(){
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(mContext,"You have been signed out.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-    private void FirebaseSignIn(){
-        // Choose authentication providers
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
-
-        // Create and launch sign-in intent
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .build(),
-                RC_SIGN_IN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                // ...
-                try {
-                    if(user != null) {
-                        Log.d("fart", "Name: " + user.getDisplayName() + " Email: " + user.getEmail() + " UID: " + user.getUid() + "IDTOKEN: " + user.getIdToken(true));
-
-                    }
-                }
-                catch(NullPointerException np){
-                    np.printStackTrace();
-                }
-            } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
-                Log.d("fart", "Sign-in failed");
-            }
-        }
     }
 
     /**
@@ -119,29 +60,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
-
-    //menu stuff
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d("fart","-make options menu-");
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.rootoptions, menu);
-        return true;
-    }
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_open_settings) {
-            return true;
-        }
-        else if(id == R.id.action_firebase_signout){
-            //disable the menu button
-            item.setEnabled(false);
-            //sign out of Firebase
-            FirebaseSignOut();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 }

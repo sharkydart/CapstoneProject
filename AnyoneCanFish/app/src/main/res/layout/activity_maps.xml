@@ -7,7 +7,6 @@
     android:theme="@style/AppTheme"
     android:id="@+id/mapholder"
     >
-
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"

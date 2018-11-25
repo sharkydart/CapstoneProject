@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivityFragment"
+    tools:showIn="@layout/activity_main"
+    android:background="@color/paper_300">
+
+    <LinearLayout
+        android:id="@+id/llMainMenuItems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="5"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:id="@+id/weatherDataFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark">
+
+            <include layout="@layout/fragment_weather_data" />
+        </FrameLayout>
+
+        <android.support.design.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:elevation="2dp"
+            app:cardBackgroundColor="@color/paper_500"
+            app:cardCornerRadius="6dp">
+
+            <TextView
+                android:id="@+id/tvFishingBasics"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|start"
+                android:padding="?dialogPreferredPadding"
+                android:textColor="@color/paper_700"
+                android:textSize="30sp"
+                tools:text="Fishing Basics" />
+        </android.support.design.card.MaterialCardView>
+
+        <android.support.design.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:elevation="2dp"
+            app:cardBackgroundColor="@color/paper_500"
+            app:cardCornerRadius="6dp">
+
+            <TextView
+                android:id="@+id/tvGameFish"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|start"
+                android:padding="?dialogPreferredPadding"
+                android:textColor="@color/paper_700"
+                android:textSize="30sp"
+                tools:text="Game Fish" />
+        </android.support.design.card.MaterialCardView>
+
+        <android.support.design.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:elevation="2dp"
+            app:cardBackgroundColor="@color/paper_500"
+            app:cardCornerRadius="6dp">
+
+            <TextView
+                android:id="@+id/tvFishingTrips"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|start"
+                android:padding="?dialogPreferredPadding"
+                android:textColor="@color/paper_700"
+                android:textSize="30sp"
+                tools:text="Fishing Trips" />
+        </android.support.design.card.MaterialCardView>
+
+        <android.support.design.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:elevation="2dp"
+            app:cardBackgroundColor="@color/paper_500"
+            app:cardCornerRadius="6dp">
+
+            <TextView
+                android:id="@+id/tvTackle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|start"
+                android:padding="?dialogPreferredPadding"
+                android:textColor="@color/paper_700"
+                android:textSize="30sp"
+                tools:text="Tackle" />
+        </android.support.design.card.MaterialCardView>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
