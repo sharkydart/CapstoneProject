@@ -1,14 +1,18 @@
 package com.homebrewforlife.sharkydart.anyonecanfish.services;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.homebrewforlife.sharkydart.anyonecanfish.MainActivity;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -29,8 +33,7 @@ public class LocationTasks {
     private static void updateLocation(final Context theContext){
         FusedLocationProviderClient mFusedLocationClient;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(theContext);
-        Log.d("fart", "permission: " + ActivityCompat.checkSelfPermission(theContext, android.Manifest.permission.ACCESS_FINE_LOCATION));
-
+        Log.d("fart", "permission: " + ActivityCompat.checkSelfPermission(theContext, Manifest.permission.ACCESS_FINE_LOCATION));
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -41,7 +44,12 @@ public class LocationTasks {
                             sendCoordinates(location, theContext);
                         }
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("fart", "exception: " + e.toString());
+            }
+        });
     }
     private static void sendCoordinates(Location local, Context context){
         Intent sendCoords = new Intent(LocationTasks.ACTION_FOUND_GPS_LOCATION);

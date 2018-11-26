@@ -1,5 +1,6 @@
 package com.homebrewforlife.sharkydart.anyonecanfish;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,6 +39,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity{
 
     private int RC_SIGN_IN = 0;   //request code
+    private int RC_SWEET_PERMISSIONS = 1337;
     private Context mContext;
     MainLocationReceiver mLocReceiver;
     IntentFilter mLocFilter;
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity{
         //immediately try to sign the user in via FirebaseUI
         FirebaseSignIn();
         //getLocation
+        verifyLocationPermissions();
         startGettingLatLon();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -81,6 +85,12 @@ public class MainActivity extends AppCompatActivity{
         Intent getLatLonIntent = new Intent(this, LocationService.class);
         getLatLonIntent.setAction(LocationTasks.ACTION_GET_GPS_LOCATION);
         startService(getLatLonIntent);
+    }
+    private void verifyLocationPermissions(){
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                RC_SWEET_PERMISSIONS);
     }
 
     /*
