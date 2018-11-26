@@ -14,7 +14,6 @@
         <TextView
             android:id="@+id/tvSunRise"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="7:31 AM" />
@@ -22,7 +21,6 @@
         <TextView
             android:id="@+id/tvSunZenith"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="12:25 PM" />
@@ -30,7 +28,6 @@
         <TextView
             android:id="@+id/tvSunSet"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="5:18 PM" />
@@ -38,32 +35,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:weightSum="4">
         <TextView
             android:id="@+id/tvHigh"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="55 F" />
         <TextView
             android:id="@+id/tvAvg"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="50 F" />
         <TextView
             android:id="@+id/tvLow"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="41 F" />
         <TextView
             android:id="@+id/tvPressure"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="~80~" />
@@ -71,18 +65,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:weightSum="2">
         <TextView
             android:id="@+id/tvFracillum"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="97%" />
         <TextView
             android:id="@+id/tvMoonPhase"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Waning Gibbous" />
@@ -96,7 +89,6 @@
         <TextView
             android:id="@+id/tvMoonRise"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="6:55 PM"
@@ -104,7 +96,6 @@
         <TextView
             android:id="@+id/tvMoonZenith"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="1:24 AM"
@@ -112,7 +103,6 @@
         <TextView
             android:id="@+id/tvMoonSet"
             android:layout_weight="1"
-            android:padding="?dialogPreferredPadding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="8:49 AM"

@@ -8,5 +8,12 @@
 
     <!-- complete sun and moon data for one day -->
     <string name="sun_moon_api_baseurl">https://api.usno.navy.mil/rstt/oneday?</string>
-
+    
+    <!-- Firebase Firestore Database Collections-->
+    <string name="db_game_fish">game_fish</string>
+    <string name="db_users">users</string>
+    <string name="db_tackle_boxes">Tackle Boxes</string>
+    <string name="db_trips">Trips</string>
+    <string name="db_lures">Lures</string>
+    <string name="db_fish_events">Fish Events</string>
 </resources>

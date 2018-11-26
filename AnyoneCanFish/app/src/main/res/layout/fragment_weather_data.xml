@@ -20,6 +20,7 @@
             android:background="@color/paper_500"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             tools:context=".DaysFragment"
-            tools:listitem="@layout/fragment_day" />
+            tools:listitem="@layout/fragment_day"
+            />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

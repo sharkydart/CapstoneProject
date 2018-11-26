@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivityFragment"
     tools:showIn="@layout/activity_main"
     android:background="@color/paper_300">
@@ -32,7 +33,6 @@
         <android.support.design.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:layout_margin="8dp"
             android:layout_weight="1"
             android:elevation="2dp"
             app:cardBackgroundColor="@color/paper_500"
@@ -43,7 +43,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|start"
-                android:padding="?dialogPreferredPadding"
+                android:paddingStart="?dialogPreferredPadding"
+                android:paddingEnd="?dialogPreferredPadding"
                 android:textColor="@color/paper_700"
                 android:textSize="30sp"
                 tools:text="Fishing Basics" />
@@ -52,7 +53,6 @@
         <android.support.design.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:layout_margin="8dp"
             android:layout_weight="1"
             android:elevation="2dp"
             app:cardBackgroundColor="@color/paper_500"
@@ -63,7 +63,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|start"
-                android:padding="?dialogPreferredPadding"
+                android:paddingStart="?dialogPreferredPadding"
+                android:paddingEnd="?dialogPreferredPadding"
                 android:textColor="@color/paper_700"
                 android:textSize="30sp"
                 tools:text="Game Fish" />
@@ -72,7 +73,6 @@
         <android.support.design.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:layout_margin="8dp"
             android:layout_weight="1"
             android:elevation="2dp"
             app:cardBackgroundColor="@color/paper_500"
@@ -83,7 +83,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|start"
-                android:padding="?dialogPreferredPadding"
+                android:paddingStart="?dialogPreferredPadding"
+                android:paddingEnd="?dialogPreferredPadding"
                 android:textColor="@color/paper_700"
                 android:textSize="30sp"
                 tools:text="Fishing Trips" />
@@ -92,7 +93,6 @@
         <android.support.design.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:layout_margin="8dp"
             android:layout_weight="1"
             android:elevation="2dp"
             app:cardBackgroundColor="@color/paper_500"
@@ -103,7 +103,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|start"
-                android:padding="?dialogPreferredPadding"
+                android:paddingStart="?dialogPreferredPadding"
+                android:paddingEnd="?dialogPreferredPadding"
                 android:textColor="@color/paper_700"
                 android:textSize="30sp"
                 tools:text="Tackle" />

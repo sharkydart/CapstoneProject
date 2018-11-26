@@ -32,8 +32,14 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+    <TextView
+        android:id="@+id/tvTempGPSDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="3dp"
+        tools:text="LOCATION"/>
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/fragment_main" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
