@@ -1,6 +1,7 @@
 package com.homebrewforlife.sharkydart.anyonecanfish.services;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -28,21 +29,24 @@ public class LocationTasks {
     private static void updateLocation(final Context theContext){
         FusedLocationProviderClient mFusedLocationClient;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(theContext);
-        if(ActivityCompat.checkSelfPermission(theContext, android.Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED)
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                // Logic to handle location object
+        Log.d("fart", "permission: " + ActivityCompat.checkSelfPermission(theContext, android.Manifest.permission.ACCESS_FINE_LOCATION));
 
-                                location.getLatitude();
-                                location.getLongitude();
-                            }
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            sendCoordinates(location, theContext);
                         }
-                    });
-        else
-            Log.i("fart", "Somehow didn't get location permission...");
+                    }
+                });
+    }
+    private static void sendCoordinates(Location local, Context context){
+        Intent sendCoords = new Intent(LocationTasks.ACTION_FOUND_GPS_LOCATION);
+        sendCoords.putExtra(LocationTasks.EXTRA_LATITUDE, local.getLatitude());
+        sendCoords.putExtra(LocationTasks.EXTRA_LONGITUDE,local.getLongitude());
+        context.sendBroadcast(sendCoords);
     }
 }

@@ -51,9 +51,9 @@
 
         <!-- Services -->
         <service android:name=".services.LocationService" android:exported="false" />
-        <service android:name=".services.FirebaseService" android:exported="false" />
-        <service android:name=".services.WeatherService" android:exported="false" />
-        <service android:name=".services.SunMoonService" android:exported="false" />
+        <!--<service android:name=".services.FirebaseService" android:exported="false" />-->
+        <!--<service android:name=".services.WeatherService" android:exported="false" />-->
+        <!--<service android:name=".services.SunMoonService" android:exported="false" />-->
 
     </application>
 

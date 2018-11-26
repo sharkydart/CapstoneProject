@@ -1,6 +1,5 @@
 package com.homebrewforlife.sharkydart.anyonecanfish;
 
-import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -55,13 +54,13 @@ public class MainActivity extends AppCompatActivity{
 
         //firestore references
         mFB_Store = FirebaseFirestore.getInstance();
-        mFB_GameFishCollection = mFB_Store.collection(getString(R.string.fb_game_fish));
+        mFB_GameFishCollection = mFB_Store.collection(getString(R.string.db_game_fish));
 
 
         //immediately try to sign the user in via FirebaseUI
         FirebaseSignIn();
         //getLocation
-        StartGettingLatLon();
+        startGettingLatLon();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,13 +72,15 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    private void StartGettingLatLon(){
+    private void startGettingLatLon(){
         mLocFilter = new IntentFilter();
         mLocFilter.addAction(LocationTasks.ACTION_FOUND_GPS_LOCATION);
         mLocReceiver = new MainLocationReceiver();
+        registerReceiver(mLocReceiver, mLocFilter);
 
         Intent getLatLonIntent = new Intent(this, LocationService.class);
         getLatLonIntent.setAction(LocationTasks.ACTION_GET_GPS_LOCATION);
+        startService(getLatLonIntent);
     }
 
     /*
@@ -108,6 +109,23 @@ public class MainActivity extends AppCompatActivity{
                         .build(),
                 RC_SIGN_IN);
     }
+    private void FirebaseGetUserInfo(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        try {
+            if(user != null) {
+                Log.d("fart", "Name: " + user.getDisplayName()
+                        + " Email: " + user.getEmail()
+                        + " UID: " + user.getUid()
+                        + "IDTOKEN: " + user.getIdToken(false));
+                //sets the reference to the users' specific document
+                mFB_UserRef = mFB_Store.collection(getString(R.string.db_users))
+                        .document(user.getIdToken(false).toString());
+            }
+        }
+        catch(NullPointerException np){
+            np.printStackTrace();
+        }
+    }
 //    TODO - 1) get basic user info from firebase, using the logged in user
 
 //    TODO - 2) get weather data: forecast temperature      (api.weather.gov)
@@ -125,22 +143,7 @@ public class MainActivity extends AppCompatActivity{
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                // ...
-                try {
-                    if(user != null) {
-                        Log.d("fart", "Name: " + user.getDisplayName()
-                                + " Email: " + user.getEmail()
-                                + " UID: " + user.getUid()
-                                + "IDTOKEN: " + user.getIdToken(false));
-                        //sets the reference to the users' specific document
-                        mFB_UserRef = mFB_Store.collection(getString(R.string.db_users))
-                                .document(user.getIdToken(false).toString());
-                    }
-                }
-                catch(NullPointerException np){
-                    np.printStackTrace();
-                }
+                FirebaseGetUserInfo();
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
@@ -185,6 +188,9 @@ public class MainActivity extends AppCompatActivity{
                 theLat = intent.getDoubleExtra(LocationTasks.EXTRA_LATITUDE, LocationTasks.DEFAULT_LAT);
                 theLon = intent.getDoubleExtra(LocationTasks.EXTRA_LONGITUDE, LocationTasks.DEFAULT_LON);
                 ((TextView)findViewById(R.id.tvTempGPSDisplay)).setText(String.format(Locale.US,"%f, %f",theLat,theLon));
+            }
+            else{
+                Log.d("fart", "broadcast: " + action);
             }
         }
     }
