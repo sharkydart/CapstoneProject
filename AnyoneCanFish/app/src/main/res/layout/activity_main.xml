@@ -15,6 +15,12 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <TextView
+                android:id="@+id/tvTempGPSDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                tools:text="LOCATION"/>
             <android.support.v7.widget.Toolbar
                 android:id="@+id/theMainToolbar"
                 android:layout_width="match_parent"
@@ -32,12 +38,6 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-    <TextView
-        android:id="@+id/tvTempGPSDisplay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="3dp"
-        tools:text="LOCATION"/>
 
     <include layout="@layout/fragment_main" />
 

@@ -40,6 +40,7 @@ public class LocationTasks {
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
+                            Log.d("fart", "Success - Sending Coordinates: " + location.getLatitude() + ", " + location.getLongitude());
                             // Logic to handle location object
                             sendCoordinates(location, theContext);
                         }
@@ -55,6 +56,6 @@ public class LocationTasks {
         Intent sendCoords = new Intent(LocationTasks.ACTION_FOUND_GPS_LOCATION);
         sendCoords.putExtra(LocationTasks.EXTRA_LATITUDE, local.getLatitude());
         sendCoords.putExtra(LocationTasks.EXTRA_LONGITUDE,local.getLongitude());
-        context.sendBroadcast(sendCoords);
+        context.getApplicationContext().sendBroadcast(sendCoords);
     }
 }

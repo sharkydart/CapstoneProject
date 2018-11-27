@@ -12,7 +12,7 @@ public class LocationService extends IntentService {
     protected void onHandleIntent(Intent theIntent) {
         if(theIntent != null) {
             String theIntentAction = theIntent.getAction();
-            Log.d("fart", "action: " + theIntentAction);
+            Log.d("fart", "Location action: " + theIntentAction);
             LocationTasks.getLastLocationTask(this, theIntentAction);
         }
     }
