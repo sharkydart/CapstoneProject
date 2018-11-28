@@ -33,7 +33,7 @@
                     android:layout_width="@dimen/navicon_size"
                     android:layout_height="@dimen/navicon_size"
                     android:layout_gravity="start|center_vertical"
-                    android:src="@drawable/fish_icon_001"
+                    android:src="@drawable/fish_001"
                     android:contentDescription="@string/app_name" />
                 <ImageView
                     android:layout_width="wrap_content"

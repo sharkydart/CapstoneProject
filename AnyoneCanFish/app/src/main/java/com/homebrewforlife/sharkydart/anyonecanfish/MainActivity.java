@@ -43,6 +43,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreStuff;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Trip;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationService;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationTasks;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.WeatherInfoService;
@@ -80,6 +82,10 @@ public class MainActivity extends AppCompatActivity{
 
     ArrayList<Fire_GameFish> mGameFishArrayList;
     public static final String GAME_FISH_ARRAYLIST = "game-fish-array-list";
+    ArrayList<Fire_Trip> mFishingTrips;
+    public static final String FISHING_TRIPS_ARRAYLIST = "game-fish-array-list";
+    ArrayList<Fire_TackleBox> mTackleBoxes;
+    public static final String TACKLE_BOXES_ARRAYLIST = "game-fish-array-list";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +139,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), FishingTripsActivity.class);
-                //intent.putExtra(/* name of data */, /* data */);
+                intent.putParcelableArrayListExtra(FISHING_TRIPS_ARRAYLIST, mFishingTrips);
                 view.getContext().startActivity(intent);
             }
         });
@@ -141,7 +147,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), TackleBoxesActivity.class);
-                //intent.putExtra(/* name of data */, /* data */);
+                intent.putParcelableArrayListExtra(TACKLE_BOXES_ARRAYLIST, mTackleBoxes);
                 view.getContext().startActivity(intent);
             }
         });
@@ -156,7 +162,7 @@ public class MainActivity extends AppCompatActivity{
             FirebaseSignIn();
         }
         else{
-            FirestoreLoadData();
+            Firestore_LoadData();
         }
     }
 
@@ -210,10 +216,11 @@ public class MainActivity extends AppCompatActivity{
         startService(getLatLonIntent);
     }
     private void startGettingFirstWeather(double lat, double lon){
-        IntentFilter mWeatherFirstReceiverFilter = new IntentFilter();
+        mWeatherFirstReceiverFilter = new IntentFilter();
         mWeatherFirstReceiverFilter.addAction(WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST);
         mWeatherFirstReceiver = new MainWeatherFirstReceiver();
         mContext.registerReceiver(mWeatherFirstReceiver, mWeatherFirstReceiverFilter);
+        Log.i("fart", "-weather receiver registered with to filter for: " + WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST + "<=");
 
         Intent getWeatherFirstIntent = new Intent(this, WeatherInfoService.class);
         getWeatherFirstIntent.putExtra(LocationTasks.EXTRA_LATITUDE, lat);
@@ -259,7 +266,7 @@ public class MainActivity extends AppCompatActivity{
                 RC_SIGN_IN);
     }
 
-    private void Firestore_Get_UserInfo(){
+    private void FirebaseGetUserInfo(){
         //FirebaseUser user = mAuth.getCurrentUser();
         try {
             if(mCurUser != null) {
@@ -268,8 +275,11 @@ public class MainActivity extends AppCompatActivity{
                         + " UID: " + mCurUser.getUid());
                 if(mCurUser.getDisplayName() == null)
                     FirebaseUpdateUserInfo(mCurUser);   //just to set a name, if there is none
-                //sets the reference to the users' specific document
-                mFS_User_document_ref = mFS_Store.collection(getString(R.string.db_users)).document(mCurUser.getUid());
+                else {
+                    //Firestore_PrepUserInfo
+                    //sets the reference to the users' specific document
+                    mFS_User_document_ref = mFS_Store.collection(getString(R.string.db_users)).document(mCurUser.getUid());
+                }
             }
         }
         catch(NullPointerException np){
@@ -312,11 +322,11 @@ public class MainActivity extends AppCompatActivity{
                     }
                 });
     }
-    private void FirestoreLoadData(){
+    private void Firestore_LoadData(){
         //firestore references
         mFS_Store = FirebaseFirestore.getInstance();
         //get specifically user firestore db data
-        Firestore_Get_UserInfo();
+        FirebaseGetUserInfo();
         //get specifically game_fish firestore db data
 //        Firestore_Get_GameFish();
         mGameFishArrayList = new ArrayList<Fire_GameFish>();
@@ -332,7 +342,7 @@ public class MainActivity extends AppCompatActivity{
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                FirestoreLoadData();
+                Firestore_LoadData();
             }
             else {
                 if(response == null || resultCode == Activity.RESULT_CANCELED) {
@@ -397,7 +407,7 @@ public class MainActivity extends AppCompatActivity{
                 theLat = intent.getDoubleExtra(LocationTasks.EXTRA_LATITUDE, -99);
                 theLon = intent.getDoubleExtra(LocationTasks.EXTRA_LONGITUDE, -99);
                 saveCoordsToSharedPrefs(theLat, theLon);
-                Log.d("fart","Coordinates: " + theLat + ", " + theLon);
+                Log.d("fart","calling 'startGettingFirstWeather' with Coordinates: " + theLat + ", " + theLon);
                 ((TextView)findViewById(R.id.tvTempGPSDisplay)).setText(String.format(Locale.US,"%f, %f",theLat,theLon));
                 startGettingFirstWeather(theLat, theLon);
             }

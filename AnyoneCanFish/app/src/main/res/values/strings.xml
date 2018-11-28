@@ -27,8 +27,13 @@
 
     <!--content description-->
     <string name="content_fish_image">Image of a fish</string>
+    <string name="content_lure_image">Image of a type of lure</string>
     <string name="title_activity_fishing_basics">The Basics of Fishing</string>
     <string name="title_activity_game_fish">Game Fish of North America</string>
     <string name="title_activity_fishing_trips">Fishing Trips</string>
     <string name="title_activity_tackle_boxes">Tackle Boxes</string>
+    <string name="basics_whatyouneed">Basic Equipment</string>
+    <string name="basics_howtofish">Someone being mentored</string>
+    <string name="basics_rulesresources">Dept of Fish and Wildlife</string>
+    <string name="basics_maintenance">Untying a knot</string>
 </resources>

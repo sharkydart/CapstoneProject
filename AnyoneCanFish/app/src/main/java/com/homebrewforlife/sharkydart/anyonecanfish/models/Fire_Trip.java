@@ -1,9 +1,16 @@
 package com.homebrewforlife.sharkydart.anyonecanfish.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
-public class Fire_Trip {
+import java.util.ArrayList;
+import java.util.Date;
+
+public class Fire_Trip implements Parcelable{
+    private String uid;
     private double latitude;
     private double longitude;
     private String name;
@@ -14,24 +21,71 @@ public class Fire_Trip {
 
     public Fire_Trip(){}
 
-    public Fire_Trip(double latitude, double longitude, String name, String desc, Timestamp dateStart, Timestamp dateEnd) {
+    public Fire_Trip(String uid, double latitude, double longitude, String name, String desc, Timestamp dateStart, Timestamp dateEnd) {
+        this.uid = uid;
         this.latitude = latitude;
         this.longitude = longitude;
         this.name = name;
         this.desc = desc;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
-        this.geo_loc = new GeoPoint(latitude, longitude);
+        syncGeoPoint();
     }
-    public Fire_Trip(GeoPoint geo_loc, String name, String desc, Timestamp dateStart, Timestamp dateEnd){
+    public Fire_Trip(String uid, GeoPoint geo_loc, String name, String desc, Timestamp dateStart, Timestamp dateEnd){
+        this.uid = uid;
         this.geo_loc = geo_loc;
-        this.latitude = geo_loc.getLatitude();
-        this.longitude = geo_loc.getLongitude();
+        syncCoords();
         this.name = name;
         this.desc = desc;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
 //        Fire_Trip(geo_loc.getLatitude(), geo_loc.getLongitude(), name, desc, dateStart, dateEnd);
+    }
+    private Fire_Trip(Parcel in){
+        this.uid = in.readString();
+        this.name = in.readString();
+        this.desc = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        this.dateStart = in.readParcelable(Timestamp.class.getClassLoader());
+        this.dateEnd = in.readParcelable(Timestamp.class.getClassLoader());
+        syncGeoPoint();
+    }
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(uid);
+        out.writeString(name);
+        out.writeString(desc);
+        out.writeDouble(latitude);
+        out.writeDouble(longitude);
+        out.writeParcelable(dateStart, flags);
+        out.writeParcelable(dateEnd, flags);
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    public static final Parcelable.Creator<Fire_Trip> CREATOR = new Parcelable.Creator<Fire_Trip>(){
+        public Fire_Trip createFromParcel(Parcel in){
+            return new Fire_Trip(in);
+        }
+        public Fire_Trip[] newArray(int size){
+            return new Fire_Trip[size];
+        }
+    };
+
+    private void syncGeoPoint(){this.geo_loc = new GeoPoint(this.latitude, this.longitude);}
+    private void syncCoords(){
+        this.latitude = geo_loc.getLatitude();
+        this.longitude = geo_loc.getLongitude();
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public double getLatitude() {
@@ -88,5 +142,14 @@ public class Fire_Trip {
 
     public void setGeo_loc(GeoPoint geo_loc) {
         this.geo_loc = geo_loc;
+    }
+
+    public String getQuickDescription(){
+        return "uid: " + uid
+                + "\n=> " + name
+                + "\n=> " + desc
+                + "\n=> " + latitude + ", " + longitude
+                + "\n=> " + dateStart
+                + "\n=> " + dateEnd;
     }
 }

@@ -31,13 +31,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/scrim"/>
+
             <TextView
                 android:id="@+id/tvFishSpecies"
-                android:layout_gravity="bottom|start"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                tools:text="fish species"/>
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/adamina"
+                android:textColor="@color/paper_300"
+                android:textSize="24sp"
+                tools:text="fish species" />
         </FrameLayout>
 
         <TextView
