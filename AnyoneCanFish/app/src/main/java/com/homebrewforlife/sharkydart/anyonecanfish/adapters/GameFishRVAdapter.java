@@ -23,7 +23,8 @@ public class GameFishRVAdapter extends RecyclerView.Adapter<GameFishRVAdapter.Vi
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Log.d("fart", "clicked a row");
+            Fire_GameFish theFish = (Fire_GameFish) view.getTag();
+            Log.d("fart", "clicked species: " + theFish.getSpecies());
         }
     };
 
@@ -68,6 +69,11 @@ public class GameFishRVAdapter extends RecyclerView.Adapter<GameFishRVAdapter.Vi
             mFishSpecies = view.findViewById(R.id.tvFishSpecies);
             mFishPic = view.findViewById(R.id.imgFishPic);
 //            mFishWikiLink = view.findViewById(R.id.btnFishWikiLink);
+        }
+        public void bindData(final Fire_GameFish viewModel){
+            mFishSpecies.setText(viewModel.getSpecies());
+            mFishInformation.setText(viewModel.getInformation());
+            Picasso.get().load(viewModel.getImage_url()).into(mFishPic);
         }
     }
 }

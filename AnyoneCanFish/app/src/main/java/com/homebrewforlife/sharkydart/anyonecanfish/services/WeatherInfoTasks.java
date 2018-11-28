@@ -23,13 +23,60 @@ import java.util.Scanner;
 public class WeatherInfoTasks {
     public static final String ACTION_GET_WEATHER_FORECAST = "get-weather-forecast";
     public static final String ACTION_FOUND_WEATHER_FORECAST = "found-weather-forecast";
-
+    public static final String EXTRA_FORECAST_API_URL = "extra-next-weather-api-url";
+    /*
+    //url for somewhere in northern kentucky
+    public static final String DEFAULT_RETURN_URL = "https://api.weather.gov/gridpoints/ILN/36,36/forecast";
+    */
     public static void queryWeatherDotGovTask(Context theContext, String theAction, double theLat, double theLon){
         if(ACTION_GET_WEATHER_FORECAST.equals(theAction)){
             //get the current gps location
             makeFirstWeatherAPIQuery(theContext, theLat, theLon);
         }
     }
+    //url formatting
+    private static URL buildFirstWeatherAPIUrl(final Context theContext, double theLat, double theLon) {
+        /*  Example API call
+        api.weather.gov/points/
+        lat
+        ,
+        lon
+        */
+
+        Uri builtUri = Uri.parse(theContext.getString(R.string.first_weather_api_baseurl)).buildUpon()
+                .appendEncodedPath(theLat + "," + theLon)
+                .build();
+
+        URL url = null;
+        try {
+            Log.d("fart", "builtURI: " + builtUri.toString());//TODO remove
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+    private static String getResponseFromUrl(URL url) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            InputStream in = urlConnection.getInputStream();
+
+            Scanner scanner = new Scanner(in);
+            scanner.useDelimiter("\\A");
+
+            boolean hasInput = scanner.hasNext();
+            if (hasInput) {
+                return scanner.next();
+            } else {
+                return null;
+            }
+        } finally {
+            urlConnection.disconnect();
+        }
+    }
+
+    //actually performing the query
     private static void makeFirstWeatherAPIQuery(final Context theContext, double theLat, double theLon){
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager)theContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -63,48 +110,6 @@ public class WeatherInfoTasks {
         }
         else{
             Toast.makeText(theContext, "First Weather Network #2", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private static URL buildFirstWeatherAPIUrl(final Context theContext, double theLat, double theLon) {
-        /*  Example API call
-        api.weather.gov/points/
-        lat
-        ,
-        lon
-        */
-
-        Uri builtUri = Uri.parse(theContext.getString(R.string.first_weather_api_baseurl)).buildUpon()
-                .appendEncodedPath(theLat + "," + theLon)
-                .build();
-
-        URL url = null;
-        try {
-            Log.d("fart", "builtURI: " + builtUri.toString());//TODO remove
-            url = new URL(builtUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        return url;
-    }
-
-    private static String getResponseFromUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return scanner.next();
-            } else {
-                return null;
-            }
-        } finally {
-            urlConnection.disconnect();
         }
     }
 

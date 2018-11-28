@@ -6,9 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -35,12 +38,15 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreStuff;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationService;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationTasks;
+import com.homebrewforlife.sharkydart.anyonecanfish.services.WeatherInfoService;
+import com.homebrewforlife.sharkydart.anyonecanfish.services.WeatherInfoTasks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,10 +58,16 @@ public class MainActivity extends AppCompatActivity{
     private int RC_SIGN_IN = 0;   //request code
     private final int RC_SWEET_PERMISSIONS = 1337;
     private Context mContext;
+    public static final String GPS_SHAREDPREFS_CACHE = "gps-sharedpreferences-cache";
+    public static final String SHAREDPREFS_LAT = "sharedpreferences-lat";
+    public static final String SHAREDPREFS_LON = "sharedpreferences-lon";
+    SharedPreferences mSharedPreferences;
 
     //Receivers and Intent Filters
     MainLocationReceiver mLocReceiver;
     IntentFilter mLocFilter;
+    MainWeatherFirstReceiver mWeatherFirstReceiver;
+    IntentFilter mWeatherFirstReceiverFilter;
 
     //Firebase Authentication
     FirebaseAuth mAuth;
@@ -159,9 +171,34 @@ public class MainActivity extends AppCompatActivity{
                     RC_SWEET_PERMISSIONS);
         }
         else{
+            //try and get GPS coords, and send them back to get the weather
+            GeoPoint coords = getCoordsFromSharedPrefs();
+            if(coords == null)
+                Log.d("fart", "no coords in shared prefs");
+            else
+                Log.d("fart", "lat: " + coords.getLatitude() + ", lon:" + coords.getLongitude());
+
             startGettingLatLon();
         }
     }
+    private void saveCoordsToSharedPrefs(double lat, double lon){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(SHAREDPREFS_LAT, Double.toString(lat));
+        editor.putString(SHAREDPREFS_LON, Double.toString(lon));
+        editor.apply();
+    }
+    private GeoPoint getCoordsFromSharedPrefs(){
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String lat = mSharedPreferences.getString(SHAREDPREFS_LAT, null);
+        String lon = mSharedPreferences.getString(SHAREDPREFS_LAT, null);
+        GeoPoint coords;
+        if(lat != null && lon != null)
+            coords = new GeoPoint(Double.valueOf(lat), Double.valueOf(lon));
+        else
+            coords = null;
+        return coords;
+    }
+
     private void startGettingLatLon(){
         mLocFilter = new IntentFilter();
         mLocFilter.addAction(LocationTasks.ACTION_FOUND_GPS_LOCATION);
@@ -171,6 +208,18 @@ public class MainActivity extends AppCompatActivity{
         Intent getLatLonIntent = new Intent(this, LocationService.class);
         getLatLonIntent.setAction(LocationTasks.ACTION_GET_GPS_LOCATION);
         startService(getLatLonIntent);
+    }
+    private void startGettingFirstWeather(double lat, double lon){
+        IntentFilter mWeatherFirstReceiverFilter = new IntentFilter();
+        mWeatherFirstReceiverFilter.addAction(WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST);
+        mWeatherFirstReceiver = new MainWeatherFirstReceiver();
+        mContext.registerReceiver(mWeatherFirstReceiver, mWeatherFirstReceiverFilter);
+
+        Intent getWeatherFirstIntent = new Intent(this, WeatherInfoService.class);
+        getWeatherFirstIntent.putExtra(LocationTasks.EXTRA_LATITUDE, lat);
+        getWeatherFirstIntent.putExtra(LocationTasks.EXTRA_LONGITUDE, lon);
+        getWeatherFirstIntent.setAction(WeatherInfoTasks.ACTION_GET_WEATHER_FORECAST);
+        startService(getWeatherFirstIntent);
     }
 
     @Override
@@ -307,8 +356,6 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-//    TODO - 1) get basic user info from firebase, using the logged in user
-
 //    TODO - 2) get weather data: forecast temperature      (api.weather.gov)
 //    TODO -    2a: if a trip is selected (settings), use that info to query, otherwise, get current GPS coords
 //    TODO -    2b: 1st query - get 'office' and 'grid position'.  2nd query - get forecast data
@@ -343,14 +390,32 @@ public class MainActivity extends AppCompatActivity{
     private class MainLocationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("fart", "Received Something...");
+            Log.d("fart", "[[Location]] Received Something...");
             String action = intent.getAction();
             if(LocationTasks.ACTION_FOUND_GPS_LOCATION.equals(action)){
                 double theLat, theLon;
-                theLat = intent.getDoubleExtra(LocationTasks.EXTRA_LATITUDE, LocationTasks.DEFAULT_LAT);
-                theLon = intent.getDoubleExtra(LocationTasks.EXTRA_LONGITUDE, LocationTasks.DEFAULT_LON);
+                theLat = intent.getDoubleExtra(LocationTasks.EXTRA_LATITUDE, -99);
+                theLon = intent.getDoubleExtra(LocationTasks.EXTRA_LONGITUDE, -99);
+                saveCoordsToSharedPrefs(theLat, theLon);
                 Log.d("fart","Coordinates: " + theLat + ", " + theLon);
                 ((TextView)findViewById(R.id.tvTempGPSDisplay)).setText(String.format(Locale.US,"%f, %f",theLat,theLon));
+                startGettingFirstWeather(theLat, theLon);
+            }
+            else{
+                Log.d("fart", "broadcast: " + action);
+            }
+        }
+    }
+    //receiver that gets the result from sending location data to the first weather api
+    private class MainWeatherFirstReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("fart", "[[Weather First]] Received Something...");
+            String action = intent.getAction();
+            if(WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST.equals(action)){
+                String theWeatherAPIURL;
+                theWeatherAPIURL = intent.getStringExtra(WeatherInfoTasks.EXTRA_FORECAST_API_URL);
+                Log.d("fart","theWeatherAPIURL: " + theWeatherAPIURL);
             }
             else{
                 Log.d("fart", "broadcast: " + action);
@@ -375,6 +440,7 @@ public class MainActivity extends AppCompatActivity{
         super.onDestroy();
         Log.d("fart", "onDestroy called");
         unregisterReceiver(mLocReceiver);
+        unregisterReceiver(mWeatherFirstReceiver);
     }
 
     /*

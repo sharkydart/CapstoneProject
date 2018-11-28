@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@color/sun_500"
         android:weightSum="3">
         <!-- Sun -->
         <TextView
@@ -16,6 +17,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/sun_300"
             tools:text="7:31 AM" />
 
         <TextView
@@ -23,6 +25,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/sun_700"
             tools:text="12:25 PM" />
 
         <TextView
@@ -30,6 +33,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/sun_300"
             tools:text="5:18 PM" />
     </LinearLayout>
     <LinearLayout
@@ -84,6 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@color/moon_500"
         android:weightSum="3">
         <!-- Moon -->
         <TextView
@@ -91,6 +96,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/moon_300"
             tools:text="6:55 PM"
             />
         <TextView
@@ -98,6 +104,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/moon_700"
             tools:text="1:24 AM"
             />
         <TextView
@@ -105,6 +112,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/moon_300"
             tools:text="8:49 AM"
             />
     </LinearLayout>

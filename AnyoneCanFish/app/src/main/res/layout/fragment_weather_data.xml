@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:paddingTop="10dp"
-            android:background="@color/paper_500"
+            android:background="@color/paper_300"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             tools:context=".DaysFragment"
             tools:listitem="@layout/fragment_day"
