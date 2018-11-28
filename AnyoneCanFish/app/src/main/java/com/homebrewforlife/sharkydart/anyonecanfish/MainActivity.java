@@ -1,12 +1,12 @@
 package com.homebrewforlife.sharkydart.anyonecanfish;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,9 +37,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreStuff;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationService;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationTasks;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -48,22 +52,22 @@ public class MainActivity extends AppCompatActivity{
     private int RC_SIGN_IN = 0;   //request code
     private final int RC_SWEET_PERMISSIONS = 1337;
     private Context mContext;
+
+    //Receivers and Intent Filters
     MainLocationReceiver mLocReceiver;
     IntentFilter mLocFilter;
-    FirebaseAuth mAuth;
-    FirebaseFirestore mFB_Store;
-    DocumentReference mFB_UserRef;
-    CollectionReference mFB_GameFishCollection;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser curUser = mAuth.getCurrentUser();
-        if(curUser == null){
-            //immediately try to sign the user in via FirebaseUI
-            FirebaseSignIn();
-        }
-    }
+    //Firebase Authentication
+    FirebaseAuth mAuth;
+    FirebaseUser mCurUser;
+
+    //Firestore Database Reference
+    FirebaseFirestore mFS_Store;
+    DocumentReference mFS_User_document_ref;
+    CollectionReference mFS_GameFish_collection_ref;
+
+    ArrayList<Fire_GameFish> mGameFishArrayList;
+    public static final String GAME_FISH_ARRAYLIST = "game-fish-array-list";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +89,63 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Make a new trip!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                        .setAction("Action", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(mContext, "Making a Trip...", Toast.LENGTH_SHORT).show();
+                                Log.i("fart", "clicked Snackbar");
+                            }
+                        }).show();
+                Log.i("fart", "clicked FAB");
             }
         });
+
+        //handle the clicks
+        findViewById(R.id.mcFishingBasics).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), FishingBasicsActivity.class);
+                //intent.putExtra(/* name of data */, /* data */);
+                view.getContext().startActivity(intent);
+            }
+        });
+        findViewById(R.id.mcGameFish).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), GameFishActivity.class);
+                intent.putParcelableArrayListExtra(GAME_FISH_ARRAYLIST, mGameFishArrayList);
+                view.getContext().startActivity(intent);
+            }
+        });
+        findViewById(R.id.mcFishingTrips).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), FishingTripsActivity.class);
+                //intent.putExtra(/* name of data */, /* data */);
+                view.getContext().startActivity(intent);
+            }
+        });
+        findViewById(R.id.mcTackleBoxes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), TackleBoxesActivity.class);
+                //intent.putExtra(/* name of data */, /* data */);
+                view.getContext().startActivity(intent);
+            }
+        });
+
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCurUser = mAuth.getCurrentUser();
+        if(mCurUser == null){
+            //immediately try to sign the user in via FirebaseUI
+            FirebaseSignIn();
+        }
+        else{
+            FirestoreLoadData();
+        }
     }
 
     private void verifyLocationPermissions(){
@@ -127,9 +185,7 @@ public class MainActivity extends AppCompatActivity{
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    /*
-            Firebase functions
-        */
+    //Firebase Functions
     private void FirebaseSignOut(){
         AuthUI.getInstance()
                 .signOut(this)
@@ -154,17 +210,17 @@ public class MainActivity extends AppCompatActivity{
                 RC_SIGN_IN);
     }
 
-    private void FirebaseGetUserInfo(){
-        FirebaseUser user = mAuth.getCurrentUser();
+    private void Firestore_Get_UserInfo(){
+        //FirebaseUser user = mAuth.getCurrentUser();
         try {
-            if(user != null) {
-                Log.d("fart", "Name: " + user.getDisplayName()
-                        + " Email: " + user.getEmail()
-                        + " UID: " + user.getUid());
-                if(user.getDisplayName() == null)
-                    FirebaseUpdateUserInfo(user);   //just to set a name, if there is none
+            if(mCurUser != null) {
+                Log.d("fart", "Name: " + mCurUser.getDisplayName()
+                        + " Email: " + mCurUser.getEmail()
+                        + " UID: " + mCurUser.getUid());
+                if(mCurUser.getDisplayName() == null)
+                    FirebaseUpdateUserInfo(mCurUser);   //just to set a name, if there is none
                 //sets the reference to the users' specific document
-                mFB_UserRef = mFB_Store.collection(getString(R.string.db_users)).document(user.getUid());
+                mFS_User_document_ref = mFS_Store.collection(getString(R.string.db_users)).document(mCurUser.getUid());
             }
         }
         catch(NullPointerException np){
@@ -190,8 +246,9 @@ public class MainActivity extends AppCompatActivity{
                     }
                 });
     }
-    private void FirebaseGet_GameFish(){
-        mFB_GameFishCollection.get()
+    private void Firestore_Get_GameFish(){
+        mFS_GameFish_collection_ref = mFS_Store.collection(getString(R.string.db_game_fish));
+        mFS_GameFish_collection_ref.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -206,9 +263,16 @@ public class MainActivity extends AppCompatActivity{
                     }
                 });
     }
-    private void doFirebaseLoading(){
-        FirebaseGetUserInfo();
-        FirebaseGet_GameFish();
+    private void FirestoreLoadData(){
+        //firestore references
+        mFS_Store = FirebaseFirestore.getInstance();
+        //get specifically user firestore db data
+        Firestore_Get_UserInfo();
+        //get specifically game_fish firestore db data
+//        Firestore_Get_GameFish();
+        mGameFishArrayList = new ArrayList<Fire_GameFish>();
+        FirestoreStuff myFirestore = new FirestoreStuff(mContext,mCurUser,mFS_Store);
+        myFirestore.Firestore_Get_GameFish(mGameFishArrayList);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -218,13 +282,21 @@ public class MainActivity extends AppCompatActivity{
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
-                //firestore references
-                mFB_Store = FirebaseFirestore.getInstance();
-                mFB_GameFishCollection = mFB_Store.collection(getString(R.string.db_game_fish));
                 // Successfully signed in
-                doFirebaseLoading();
+                FirestoreLoadData();
             }
             else {
+                if(response == null || resultCode == Activity.RESULT_CANCELED) {
+                    Log.d("fart", "User cancelled sign in");
+                    return;
+                }
+                if(response.getError() == null)
+                    return;
+                if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    Snackbar.make(findViewById(android.R.id.content), "No Network!", Snackbar.LENGTH_LONG)
+                            .show();
+                    return;
+                }
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.

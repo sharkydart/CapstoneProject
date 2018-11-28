@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">Anyone Can Fish</string>
     <string name="title_activity_maps">Anyone Can Fish Map</string>
-    <string name="title_activity_main">Main Menu</string>
+
+    <string name="main_btn_fishing_basics">Fishing Basics</string>
+    <string name="main_btn_game_fish">Game Fish of North America</string>
+    <string name="main_btn_mytrips">Fishing Trips</string>
+    <string name="main_btn_mytackle">Tackle Boxes</string>
 
     <string name="mainmenu_settings">Settings</string>
     <string name="mainmenu_signout">Sign Out</string>
@@ -11,7 +15,7 @@
     <string name="first_weather_api_baseurl">api.weather.gov/points/</string>
     <string name="weather_properties_OBJ">properties</string>
     <string name="weather_properties_forecast_STR">forecast</string>
-    
+
     <!-- Firebase Firestore Database Collections-->
     <string name="db_game_fish">game_fish</string>
     <string name="db_users">users</string>
@@ -19,4 +23,12 @@
     <string name="db_trips">Trips</string>
     <string name="db_lures">Lures</string>
     <string name="db_fish_events">FishEvents</string>
+
+
+    <!--content description-->
+    <string name="content_fish_image">Image of a fish</string>
+    <string name="title_activity_fishing_basics">The Basics of Fishing</string>
+    <string name="title_activity_game_fish">Game Fish of North America</string>
+    <string name="title_activity_fishing_trips">Fishing Trips</string>
+    <string name="title_activity_tackle_boxes">Tackle Boxes</string>
 </resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.card.MaterialCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="2dp"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="2dp"
+    android:id="@+id/mcrvGameFish"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/llrvGameFish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <FrameLayout
+            android:id="@+id/flrvGameFish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="bottom"
+            >
+            <ImageView
+                android:id="@+id/imgFishPic"
+                android:layout_width="match_parent"
+                android:layout_height="165dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/content_fish_image"
+                />
+            <view
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/scrim"/>
+            <TextView
+                android:id="@+id/tvFishSpecies"
+                android:layout_gravity="bottom|start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:textAppearance="?attr/textAppearanceListItem"
+                tools:text="fish species"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvFishInformation"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"
+            tools:text="fish information"/>
+    </LinearLayout>
+
+</android.support.design.card.MaterialCardView>

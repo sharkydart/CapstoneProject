@@ -25,18 +25,23 @@
             android:id="@+id/weatherDataFrameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@color/colorPrimaryDark">
 
             <include layout="@layout/fragment_weather_data" />
         </FrameLayout>
 
         <android.support.design.card.MaterialCardView
+            android:id="@+id/mcFishingBasics"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_weight="1"
-            android:elevation="2dp"
+            android:padding="1dp"
             app:cardBackgroundColor="@color/paper_500"
-            app:cardCornerRadius="6dp">
+            app:cardElevation="2dp"
+            app:cardCornerRadius="0dp"
+            app:cardPreventCornerOverlap="true"
+            >
 
             <TextView
                 android:id="@+id/tvFishingBasics"
@@ -47,16 +52,21 @@
                 android:paddingEnd="?dialogPreferredPadding"
                 android:textColor="@color/paper_700"
                 android:textSize="30sp"
+                android:text="@string/main_btn_fishing_basics"
                 tools:text="Fishing Basics" />
         </android.support.design.card.MaterialCardView>
 
         <android.support.design.card.MaterialCardView
+            android:id="@+id/mcGameFish"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_weight="1"
-            android:elevation="2dp"
+            android:padding="1dp"
             app:cardBackgroundColor="@color/paper_500"
-            app:cardCornerRadius="6dp">
+            app:cardElevation="2dp"
+            app:cardCornerRadius="0dp"
+            app:cardPreventCornerOverlap="true"
+            >
 
             <TextView
                 android:id="@+id/tvGameFish"
@@ -67,16 +77,20 @@
                 android:paddingEnd="?dialogPreferredPadding"
                 android:textColor="@color/paper_700"
                 android:textSize="30sp"
+                android:text="@string/main_btn_game_fish"
                 tools:text="Game Fish" />
         </android.support.design.card.MaterialCardView>
 
         <android.support.design.card.MaterialCardView
+            android:id="@+id/mcFishingTrips"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_weight="1"
-            android:elevation="2dp"
+            android:padding="1dp"
             app:cardBackgroundColor="@color/paper_500"
-            app:cardCornerRadius="6dp">
+            app:cardElevation="2dp"
+            app:cardCornerRadius="0dp"
+            app:cardPreventCornerOverlap="true">
 
             <TextView
                 android:id="@+id/tvFishingTrips"
@@ -87,19 +101,23 @@
                 android:paddingEnd="?dialogPreferredPadding"
                 android:textColor="@color/paper_700"
                 android:textSize="30sp"
+                android:text="@string/main_btn_mytrips"
                 tools:text="Fishing Trips" />
         </android.support.design.card.MaterialCardView>
 
         <android.support.design.card.MaterialCardView
+            android:id="@+id/mcTackleBoxes"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_weight="1"
-            android:elevation="2dp"
+            android:padding="1dp"
             app:cardBackgroundColor="@color/paper_500"
-            app:cardCornerRadius="6dp">
+            app:cardElevation="2dp"
+            app:cardCornerRadius="0dp"
+            app:cardPreventCornerOverlap="true">
 
             <TextView
-                android:id="@+id/tvTackle"
+                android:id="@+id/tvTackleBoxes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|start"
@@ -107,6 +125,7 @@
                 android:paddingEnd="?dialogPreferredPadding"
                 android:textColor="@color/paper_700"
                 android:textSize="30sp"
+                android:text="@string/main_btn_mytackle"
                 tools:text="Tackle" />
         </android.support.design.card.MaterialCardView>
     </LinearLayout>
