@@ -1,6 +1,9 @@
 package com.homebrewforlife.sharkydart.anyonecanfish.models;
 
-public class forecast_period {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ForecastPeriod implements Parcelable {
     /*
         represents weather data for a less-than 24 hr period of time
      */
@@ -8,7 +11,7 @@ public class forecast_period {
     private String name;
     private String startTime;
     private String endTime;
-    private String isDayTime;   //lowercase boolean
+    private Boolean isDayTime;   //lowercase boolean
     private double temperature;
     private String temperatureUnit;
     private String windSpeed;
@@ -17,17 +20,17 @@ public class forecast_period {
     private String shortForecast;
     private String detailedForecast;
 
-    public forecast_period(){}
+    public ForecastPeriod(){}
 
-    public forecast_period(int number, String name, String startTime, String endTime,
-                           String isDayTime, double temperature, String temperatureUnit, String windSpeed,
-                           String windDirection, String iconURL, String shortForecast, String detailedForecast) {
+    public ForecastPeriod(int number, String name, String startTime, String endTime,
+                          Boolean isDayTime, double temperature, String temperatureUnit, String windSpeed,
+                          String windDirection, String iconURL, String shortForecast, String detailedForecast) {
         this.number = number;
+        this.isDayTime = isDayTime;
+        this.temperature = temperature;
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.isDayTime = isDayTime;
-        this.temperature = temperature;
         this.temperatureUnit = temperatureUnit;
         this.windSpeed = windSpeed;
         this.windDirection = windDirection;
@@ -35,6 +38,47 @@ public class forecast_period {
         this.shortForecast = shortForecast;
         this.detailedForecast = detailedForecast;
     }
+    private ForecastPeriod(Parcel in){
+        this.number = in.readInt();
+        this.isDayTime = (in.readInt() == 1);
+        this.temperature = in.readDouble();
+        this.name = in.readString();
+        this.startTime = in.readString();
+        this.endTime = in.readString();
+        this.temperatureUnit = in.readString();
+        this.windSpeed = in.readString();
+        this.windDirection = in.readString();
+        this.iconURL = in.readString();
+        this.shortForecast = in.readString();
+        this.detailedForecast = in.readString();
+    }
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(number);
+        out.writeInt(isDayTime ? 1 : 0);
+        out.writeDouble(temperature);
+        out.writeString(name);
+        out.writeString(startTime);
+        out.writeString(endTime);
+        out.writeString(temperatureUnit);
+        out.writeString(windSpeed);
+        out.writeString(windDirection);
+        out.writeString(iconURL);
+        out.writeString(shortForecast);
+        out.writeString(detailedForecast);
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    public static final Parcelable.Creator<ForecastPeriod> CREATOR = new Parcelable.Creator<ForecastPeriod>(){
+        public ForecastPeriod createFromParcel(Parcel in){
+            return new ForecastPeriod(in);
+        }
+        public ForecastPeriod[] newArray(int size){
+            return new ForecastPeriod[size];
+        }
+    };
 
     public int getNumber() {
         return number;
@@ -68,11 +112,11 @@ public class forecast_period {
         this.endTime = endTime;
     }
 
-    public String getIsDayTime() {
+    public Boolean getIsDayTime() {
         return isDayTime;
     }
 
-    public void setIsDayTime(String isDayTime) {
+    public void setIsDayTime(Boolean isDayTime) {
         this.isDayTime = isDayTime;
     }
 
@@ -130,5 +174,20 @@ public class forecast_period {
 
     public void setDetailedForecast(String detailedForecast) {
         this.detailedForecast = detailedForecast;
+    }
+
+    public String getQuickDescription(){
+        return number
+        + "\nname =>" +   name
+        + "\nstartTime =>" +   startTime
+        + "\nendTime =>" +   endTime
+        + "\nisDayTime =>" +   isDayTime   //lowercase boolean
+        + "\ntemperature =>" +   temperature
+        + "\ntemperatureUnit =>" +   temperatureUnit
+        + "\nwindSpeed =>" +   windSpeed
+        + "\nwindDirection =>" +   windDirection   //wind from the west, fishing is best wind from the east, fishing is least
+        + "\niconURL =>" +   iconURL
+        + "\nshortForecast =>" +   shortForecast
+        + "\ndetailedForecast =>" +   detailedForecast;
     }
 }

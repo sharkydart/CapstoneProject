@@ -138,14 +138,7 @@ public class FirestoreStuff {
                         if(theGameFish != null)
                             theGameFish.clear();
                         for (QueryDocumentSnapshot gamefish : queryDocumentSnapshots) {
-                            Log.d("fart", gamefish.getId()
-                                    + " => " + gamefish.getString("species")
-                                    + " => " + gamefish.getString("wiki")
-                                    + " => " + gamefish.getString("image_url")
-                                    + " => " + gamefish.getString("information")
-                            );
                             Fire_GameFish bork = gamefish.toObject(Fire_GameFish.class);
-                            Log.i("fart", bork.getQuickDescription());
                             if(theGameFish != null) {
                                 theGameFish.add(bork);
                             }

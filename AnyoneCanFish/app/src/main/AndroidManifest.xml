@@ -60,6 +60,9 @@
         <service
             android:name=".services.WeatherInfoService"
             android:exported="false" />
+        <service
+            android:name=".services.GetForecastDataService"
+            android:exported="false" />
         <!-- <service android:name=".services.FirebaseService" android:exported="false" /> -->
         <!-- <service android:name=".services.SunMoonService" android:exported="false" /> -->
 

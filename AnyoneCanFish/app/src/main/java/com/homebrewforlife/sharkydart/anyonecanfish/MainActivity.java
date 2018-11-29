@@ -46,6 +46,9 @@ import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_FishEvent;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Trip;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.ForecastPeriod;
+import com.homebrewforlife.sharkydart.anyonecanfish.services.GetForecastDataService;
+import com.homebrewforlife.sharkydart.anyonecanfish.services.GetForecastDataTasks;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationService;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationTasks;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.WeatherInfoService;
@@ -61,9 +64,13 @@ public class MainActivity extends AppCompatActivity{
     private int RC_SIGN_IN = 0;   //request code
     private final int RC_SWEET_PERMISSIONS = 1337;
     private Context mContext;
-    public static final String GPS_SHAREDPREFS_CACHE = "gps-sharedpreferences-cache";
+    ArrayList<ForecastPeriod> mTheForecastPeriods;
+//    public static final String GPS_SHAREDPREFS_CACHE = "gps-sharedpreferences-cache";
+    public static final String FIRST_FORECAST_URL_SHAREDPREFS_CACHE = "last-cached-forecast-url";
+    public static final String CITY_SHAREDPREFS_CACHE = "last-cached-forecast-city";
     public static final String SHAREDPREFS_LAT = "sharedpreferences-lat";
     public static final String SHAREDPREFS_LON = "sharedpreferences-lon";
+    public static final String RAW_FORECAST_DATA_SHAREDPREFS_CACHE = "raw-forecast-data-cache";
     SharedPreferences mSharedPreferences;
 
     //Receivers and Intent Filters
@@ -71,6 +78,8 @@ public class MainActivity extends AppCompatActivity{
     IntentFilter mLocFilter;
     MainWeatherFirstReceiver mWeatherFirstReceiver;
     IntentFilter mWeatherFirstReceiverFilter;
+    MainForecastReceiver mForecastReceiver;
+    IntentFilter mForecastReceiverFilter;
 
     //Firebase Authentication
     FirebaseAuth mAuth;
@@ -187,12 +196,21 @@ public class MainActivity extends AppCompatActivity{
                 startGettingLatLon();
             }
             else {   //use shared prefs to refresh weather, unless forceUpdate, in which case - get GPS coords again
-                Log.d("fart", "lat: " + coords.getLatitude() + ", lon:" + coords.getLongitude());
-                if(forceUpdate)     //button was clicked to refresh GPS
+                if(((TextView)findViewById(R.id.tvTempGPSDisplay)).getText().toString().isEmpty()){
+                    String temp = coords.getLatitude() + ", " + coords.getLongitude();
+                    ((TextView)findViewById(R.id.tvTempGPSDisplay)).setText(temp);
+                }
+
+                if(forceUpdate){     //button was clicked to refresh GPS
                     startGettingLatLon();
+                }
                 else {    //button was not clicked to refresh
-                    //TODO - when we have first weather url, can skip and call 2nd weather
-                    startGettingFirstWeather(coords.getLatitude(), coords.getLongitude());
+                    String prefsForecastURL = getLastForecastURLFromSharedPrefs();
+                    if(prefsForecastURL != null)
+                        //TODO - when we have first weather url, can skip and call 2nd weather, unless update is forced
+                        Log.d("fart", "have forecast url already");
+                    else
+                        startGettingFirstWeather(coords.getLatitude(), coords.getLongitude());
                 }
             }
         }
@@ -214,6 +232,20 @@ public class MainActivity extends AppCompatActivity{
             coords = null;
         return coords;
     }
+    private void saveFirstForecastURLAndCityToSharedPrefs(String forecasturl, String city){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(FIRST_FORECAST_URL_SHAREDPREFS_CACHE, forecasturl);
+        editor.putString(CITY_SHAREDPREFS_CACHE, city);
+        editor.apply();
+    }
+    public String getLastForecastURLFromSharedPrefs(){
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return mSharedPreferences.getString(FIRST_FORECAST_URL_SHAREDPREFS_CACHE, null);
+    }
+    public String getLastForecastCITYFromSharedPrefs(){
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return mSharedPreferences.getString(CITY_SHAREDPREFS_CACHE, null);
+    }
 
     private void startGettingLatLon(){
         mLocFilter = new IntentFilter();
@@ -227,16 +259,26 @@ public class MainActivity extends AppCompatActivity{
     }
     private void startGettingFirstWeather(double lat, double lon){
         mWeatherFirstReceiverFilter = new IntentFilter();
-        mWeatherFirstReceiverFilter.addAction(WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST);
+        mWeatherFirstReceiverFilter.addAction(WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST_API);
         mWeatherFirstReceiver = new MainWeatherFirstReceiver();
         mContext.registerReceiver(mWeatherFirstReceiver, mWeatherFirstReceiverFilter);
-        Log.i("fart", "-weather receiver registered with to filter for: " + WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST + "<=");
 
         Intent getWeatherFirstIntent = new Intent(this, WeatherInfoService.class);
         getWeatherFirstIntent.putExtra(LocationTasks.EXTRA_LATITUDE, lat);
         getWeatherFirstIntent.putExtra(LocationTasks.EXTRA_LONGITUDE, lon);
         getWeatherFirstIntent.setAction(WeatherInfoTasks.ACTION_GET_WEATHER_FORECAST);
         startService(getWeatherFirstIntent);
+    }
+    private void startGettingForecastData(String theForecastApiUrl){
+        mForecastReceiverFilter = new IntentFilter();
+        mForecastReceiverFilter.addAction(GetForecastDataTasks.ACTION_FOUND_FORECAST_DATA);
+        mForecastReceiver = new MainForecastReceiver();
+        mContext.registerReceiver(mForecastReceiver, mForecastReceiverFilter);
+
+        Intent getForecastIntent = new Intent(this, GetForecastDataService.class);
+        getForecastIntent.putExtra(GetForecastDataTasks.EXTRA_THE_FORECAST_API_URL, theForecastApiUrl);
+        getForecastIntent.setAction(GetForecastDataTasks.ACTION_GET_FORECAST_DATA);
+        startService(getForecastIntent);
     }
 
     @Override
@@ -369,12 +411,6 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-//    TODO - 2) get weather data: forecast temperature      (api.weather.gov)
-//    TODO -    2b: 1st query - get 'office' and 'grid position'.  2nd query - get forecast data
-
-//    TODO - 3) get weather data: one day sun and moon data (api.usno.navy.mil/rstt/oneday)
-
-
     //menu stuff
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -424,10 +460,32 @@ public class MainActivity extends AppCompatActivity{
         public void onReceive(Context context, Intent intent) {
             Log.d("fart", "[[Weather First]] Received Something...");
             String action = intent.getAction();
-            if(WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST.equals(action)){
-                String theWeatherAPIURL;
+            if(WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST_API.equals(action)){
+                String theWeatherAPIURL, theCity;
                 theWeatherAPIURL = intent.getStringExtra(WeatherInfoTasks.EXTRA_FORECAST_API_URL);
+                theCity = intent.getStringExtra(WeatherInfoTasks.EXTRA_CITY);
                 Log.d("fart","theWeatherAPIURL: " + theWeatherAPIURL);
+                Log.d("fart", "city: " + theCity);
+
+                //TODO - need to use the forecastAPI to call API to actually get weather data
+                startGettingForecastData(theWeatherAPIURL);
+            }
+            else{
+                Log.d("fart", "broadcast: " + action);
+            }
+        }
+    }
+    //MainForecastReceiver
+    private class MainForecastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("fart", "[[Forecast API call]] Received Something...");
+            String action = intent.getAction();
+            if(GetForecastDataTasks.ACTION_FOUND_FORECAST_DATA.equals(action)){
+                mTheForecastPeriods = intent.getParcelableArrayListExtra(GetForecastDataTasks.EXTRA_THE_FORECAST_DATA);
+                for(ForecastPeriod fP : mTheForecastPeriods){
+                    Log.i("fart", fP.getQuickDescription());
+                }
             }
             else{
                 Log.d("fart", "broadcast: " + action);
@@ -452,6 +510,7 @@ public class MainActivity extends AppCompatActivity{
         super.onDestroy();
         Log.d("fart", "onDestroy called");
         try {
+            unregisterReceiver(mForecastReceiver);
             unregisterReceiver(mLocReceiver);
             unregisterReceiver(mWeatherFirstReceiver);
         }catch (IllegalArgumentException e){

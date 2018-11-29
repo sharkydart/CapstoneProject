@@ -4,13 +4,13 @@ import java.util.List;
 
 public class MyForecast {
     private String forecastURL;
-    private List<forecast_period> forecast_Periods;
+    private List<ForecastPeriod> forecastPeriods;
 
     public MyForecast(){}
 
-    public MyForecast(String forecastURL, List<forecast_period> forecast_Periods) {
+    public MyForecast(String forecastURL, List<ForecastPeriod> forecastPeriods) {
         this.forecastURL = forecastURL;
-        this.forecast_Periods = forecast_Periods;
+        this.forecastPeriods = forecastPeriods;
     }
 
     public String getForecastURL() {
@@ -21,11 +21,11 @@ public class MyForecast {
         this.forecastURL = forecastURL;
     }
 
-    public List<forecast_period> getForecast_Periods() {
-        return forecast_Periods;
+    public List<ForecastPeriod> getForecastPeriods() {
+        return forecastPeriods;
     }
 
-    public void setForecast_Periods(List<forecast_period> forecast_Periods) {
-        this.forecast_Periods = forecast_Periods;
+    public void setForecastPeriods(List<ForecastPeriod> forecastPeriods) {
+        this.forecastPeriods = forecastPeriods;
     }
 }
