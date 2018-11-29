@@ -2,24 +2,24 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/llWeatherData"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
-        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/rvWeatherDays"
-            android:name="com.homebrewforlife.sharkydart.anyonecanfish.DaysFragment"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="160dp"
             android:paddingTop="10dp"
             android:background="@color/paper_300"
+            android:orientation="horizontal"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            tools:context=".DaysFragment"
             tools:listitem="@layout/fragment_day"
             />
     </LinearLayout>

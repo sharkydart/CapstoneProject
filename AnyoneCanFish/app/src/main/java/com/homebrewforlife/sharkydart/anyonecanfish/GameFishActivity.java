@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class GameFishActivity extends AppCompatActivity {
 
     ArrayList<Fire_GameFish> mGameFishArrayList;
-    GameFishRVAdapter mGameFishRvAdapter;
+    GameFishRVAdapter mGameFishRVAdapter;
     RecyclerView mGameFishRV;
 
     @Override
@@ -54,10 +54,10 @@ public class GameFishActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mGameFishRvAdapter = new GameFishRVAdapter(this, mGameFishArrayList);
+        mGameFishRVAdapter = new GameFishRVAdapter(this, mGameFishArrayList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mGameFishRvAdapter);
+        recyclerView.setAdapter(mGameFishRVAdapter);
     }
 
     @Override

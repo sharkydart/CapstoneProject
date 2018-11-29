@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Anyone Can Fish</string>
+    <string name="little_fish_icon">Little Fish Icon</string>
+    <string name="forecast_weather_icon">Weather Icon</string>
     <string name="title_activity_maps">Anyone Can Fish Map</string>
 
     <string name="main_btn_fishing_basics">Fishing Basics</string>
@@ -13,8 +15,6 @@
     <!-- complete sun and moon data for one day -->
     <string name="solunar_api_baseurl">https://api.usno.navy.mil/rstt/oneday?</string>
     <string name="first_weather_api_baseurl">https://api.weather.gov/points/</string>
-    <string name="weather_properties_OBJ">properties</string>
-    <string name="weather_properties_forecast_STR">forecast</string>
 
     <!-- Firebase Firestore Database Collections-->
     <string name="db_game_fish">game_fish</string>

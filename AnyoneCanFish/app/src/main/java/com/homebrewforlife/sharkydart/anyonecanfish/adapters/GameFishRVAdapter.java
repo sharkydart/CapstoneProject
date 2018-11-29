@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.homebrewforlife.sharkydart.anyonecanfish.GameFishActivity;
 import com.homebrewforlife.sharkydart.anyonecanfish.R;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.squareup.picasso.Picasso;

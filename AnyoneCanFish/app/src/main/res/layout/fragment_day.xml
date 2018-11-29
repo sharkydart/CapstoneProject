@@ -1,17 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="2dp"
     >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/black_ish">
+        <TextView
+            android:id="@+id/tvPeriodName"
+            android:paddingStart="@dimen/list_side_margin"
+            android:paddingEnd="@dimen/list_side_margin"
+            android:layout_gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/paper_300"
+            tools:text="Today" />
+
+        <TextView
+            android:id="@+id/tvShortForecast"
+            android:paddingStart="@dimen/list_side_margin"
+            android:paddingEnd="@dimen/list_side_margin"
+            android:layout_gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/paper_500"
+            tools:text="Chance Freezing Rain then Chance Light Rain" />
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgWeatherIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/forecast_weather_icon"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="4">
+            <TextView
+                android:id="@+id/tvTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="8dp"
+                android:fontFamily="@font/adamina"
+                android:textSize="32sp"
+                android:layout_weight="2"
+                tools:text="50 F" />
+
+            <TextView
+                android:id="@+id/tvWindSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="8dp"
+                android:fontFamily="@font/adamina"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                tools:text="4" />
+
+            <TextView
+                android:id="@+id/tvWindDirection"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="8dp"
+                android:fontFamily="@font/adamina"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                tools:text="NW" />
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/sun_500"
         android:weightSum="3">
-        <!-- Sun -->
         <TextView
             android:id="@+id/tvSunRise"
             android:layout_weight="1"
@@ -40,36 +123,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="4">
-        <TextView
-            android:id="@+id/tvHigh"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="55 F" />
-        <TextView
-            android:id="@+id/tvAvg"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="50 F" />
-        <TextView
-            android:id="@+id/tvLow"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="41 F" />
-        <TextView
-            android:id="@+id/tvPressure"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="~80~" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:weightSum="2">
         <TextView
             android:id="@+id/tvFracillum"
@@ -90,7 +143,6 @@
         android:orientation="horizontal"
         android:background="@color/moon_500"
         android:weightSum="3">
-        <!-- Moon -->
         <TextView
             android:id="@+id/tvMoonRise"
             android:layout_weight="1"
@@ -116,6 +168,5 @@
             tools:text="8:49 AM"
             />
     </LinearLayout>
-
-
 </LinearLayout>
+</android.support.design.card.MaterialCardView>

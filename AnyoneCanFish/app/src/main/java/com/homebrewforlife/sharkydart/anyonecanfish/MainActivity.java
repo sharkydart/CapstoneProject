@@ -11,11 +11,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -29,8 +32,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,10 +41,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.homebrewforlife.sharkydart.anyonecanfish.adapters.ForecastRvAdapter;
 import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreStuff;
-import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_FishEvent;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Trip;
@@ -65,9 +64,9 @@ public class MainActivity extends AppCompatActivity{
     private int RC_SIGN_IN = 0;   //request code
     private final int RC_SWEET_PERMISSIONS = 1337;
     private Context mContext;
-    ArrayList<ForecastPeriod> mTheForecastPeriods;
-//    public static final String GPS_SHAREDPREFS_CACHE = "gps-sharedpreferences-cache";
-    public static final String FIRST_FORECAST_URL_SHAREDPREFS_CACHE = "last-cached-forecast-url";
+
+    //    public static final String GPS_SHAREDPREFS_CACHE = "gps-sharedpreferences-cache";
+    public static final String FORECAST_URL_SHAREDPREFS_CACHE = "last-cached-forecast-url";
     public static final String CITY_SHAREDPREFS_CACHE = "last-cached-forecast-city";
     public static final String SHAREDPREFS_LAT = "sharedpreferences-lat";
     public static final String SHAREDPREFS_LON = "sharedpreferences-lon";
@@ -91,6 +90,13 @@ public class MainActivity extends AppCompatActivity{
     DocumentReference mFS_User_document_ref;
     CollectionReference mFS_GameFish_collection_ref;
 
+    //weather recyclerView
+    ArrayList<ForecastPeriod> mForecastPeriodsArrayList;
+    ForecastRvAdapter mForecastRvAdapter;
+    RecyclerView mForecastRecyclerView;
+    public static final String FORECAST_ARRAYLIST = "weather-forecast-array-list";
+
+    //Arraylists to send to child activities
     ArrayList<Fire_GameFish> mGameFishArrayList;
     public static final String GAME_FISH_ARRAYLIST = "game-fish-array-list";
     ArrayList<Fire_Trip> mFishingTripsArray;
@@ -174,7 +180,26 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        if(savedInstanceState == null){
+            mForecastPeriodsArrayList = new ArrayList<>();
+        }else if(savedInstanceState.containsKey(MainActivity.FORECAST_ARRAYLIST)){
+            mForecastPeriodsArrayList = savedInstanceState.getParcelableArrayList(MainActivity.FORECAST_ARRAYLIST);
+        }
+
+        mForecastRecyclerView = findViewById(R.id.rvWeatherDays);
+        assert mForecastRecyclerView != null;
+//        setupRecyclerView(mForecastRecyclerView);
     }
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        mForecastRvAdapter = new ForecastRvAdapter(this, mForecastPeriodsArrayList);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        SnapHelper snapHelper = new PagerSnapHelper();
+        recyclerView.setLayoutManager(layoutManager);
+        snapHelper.attachToRecyclerView(recyclerView);
+        recyclerView.setAdapter(mForecastRvAdapter);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -215,10 +240,9 @@ public class MainActivity extends AppCompatActivity{
                     startGettingLatLon();
                 }
                 else {    //button was not clicked to refresh
-                    String prefsForecastURL = getLastForecastURLFromSharedPrefs();
+                    String prefsForecastURL = getForecastURLFromSharedPrefs();
                     if(prefsForecastURL != null)
-                        //TODO - when we have first weather url, can skip and call 2nd weather, unless update is forced
-                        Log.d("fart", "have forecast url already");
+                        startGettingForecastData(prefsForecastURL);
                     else
                         startGettingFirstWeather(coords.getLatitude(), coords.getLongitude());
                 }
@@ -242,15 +266,15 @@ public class MainActivity extends AppCompatActivity{
             coords = null;
         return coords;
     }
-    private void saveFirstForecastURLAndCityToSharedPrefs(String forecasturl, String city){
+    private void saveForecastURLAndCityToSharedPrefs(String forecasturl, String city){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(FIRST_FORECAST_URL_SHAREDPREFS_CACHE, forecasturl);
+        editor.putString(FORECAST_URL_SHAREDPREFS_CACHE, forecasturl);
         editor.putString(CITY_SHAREDPREFS_CACHE, city);
         editor.apply();
     }
-    public String getLastForecastURLFromSharedPrefs(){
+    public String getForecastURLFromSharedPrefs(){
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return mSharedPreferences.getString(FIRST_FORECAST_URL_SHAREDPREFS_CACHE, null);
+        return mSharedPreferences.getString(FORECAST_URL_SHAREDPREFS_CACHE, null);
     }
     public String getLastForecastCITYFromSharedPrefs(){
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -477,7 +501,7 @@ public class MainActivity extends AppCompatActivity{
                 Log.d("fart","theWeatherAPIURL: " + theWeatherAPIURL);
                 Log.d("fart", "city: " + theCity);
 
-                //TODO - need to use the forecastAPI to call API to actually get weather data
+                saveForecastURLAndCityToSharedPrefs(theWeatherAPIURL, theCity);
                 startGettingForecastData(theWeatherAPIURL);
             }
             else{
@@ -492,10 +516,16 @@ public class MainActivity extends AppCompatActivity{
             Log.d("fart", "[[Forecast API call]] Received Something...");
             String action = intent.getAction();
             if(GetForecastDataTasks.ACTION_FOUND_FORECAST_DATA.equals(action)){
-                mTheForecastPeriods = intent.getParcelableArrayListExtra(GetForecastDataTasks.EXTRA_THE_FORECAST_DATA);
-                for(ForecastPeriod fP : mTheForecastPeriods){
-                    Log.i("fart", fP.getQuickDescription());
-                }
+                mForecastPeriodsArrayList = intent.getParcelableArrayListExtra(GetForecastDataTasks.EXTRA_THE_FORECAST_DATA);
+                Log.d("fart","size= "+ mForecastPeriodsArrayList.size());
+                setupRecyclerView(mForecastRecyclerView);
+/*
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    public void run() {
+                        mBusinessAdapter.notifyDataSetChanged();
+                    }
+                });
+*/
             }
             else{
                 Log.d("fart", "broadcast: " + action);

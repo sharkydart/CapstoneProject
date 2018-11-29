@@ -105,7 +105,7 @@ public class WeatherInfoTasks {
     private static void parseFirstWeatherJSON(final Context theContext, String weatherDataJSON){
         if (weatherDataJSON != null) {
             try {
-                JSONObject weatherPropertiesObj = new JSONObject(weatherDataJSON).getJSONObject(theContext.getString(R.string.weather_properties_OBJ));
+                JSONObject weatherPropertiesObj = new JSONObject(weatherDataJSON).getJSONObject("properties");
                 String forecast = weatherPropertiesObj.getString("forecast");
                 Log.d("fart", "forecastURL: " + forecast);
                 String city = weatherPropertiesObj.getJSONObject("relativeLocation").getJSONObject("properties").getString("city");
@@ -132,7 +132,7 @@ public class WeatherInfoTasks {
 
     private static void saveFirstForecastURLAndCityToSharedPrefs(Context theContext, String forecasturl, String city){
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(theContext).edit();
-        editor.putString(MainActivity.FIRST_FORECAST_URL_SHAREDPREFS_CACHE, forecasturl);
+        editor.putString(MainActivity.FORECAST_URL_SHAREDPREFS_CACHE, forecasturl);
         editor.putString(MainActivity.CITY_SHAREDPREFS_CACHE, city);
         editor.apply();
     }

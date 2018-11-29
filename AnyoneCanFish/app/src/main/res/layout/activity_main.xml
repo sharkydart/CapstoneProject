@@ -29,17 +29,20 @@
                 android:layout_marginStart="@dimen/list_toolbar_side_margin"
                 android:layout_marginEnd="@dimen/list_toolbar_side_margin"
                 app:layout_scrollFlags="scroll|enterAlways">
-                <ImageView
-                    android:layout_width="@dimen/navicon_size"
-                    android:layout_height="@dimen/navicon_size"
-                    android:layout_gravity="start|center_vertical"
-                    android:src="@drawable/fish_001"
-                    android:contentDescription="@string/app_name" />
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/logo" />
+                <ImageView
+                    android:layout_width="@dimen/navicon_size"
+                    android:layout_height="@dimen/navicon_size"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/logo"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:src="@drawable/fish_001"
                     android:contentDescription="@string/app_name" />
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -53,6 +56,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_popup_sync" />
 
 </android.support.design.widget.CoordinatorLayout>

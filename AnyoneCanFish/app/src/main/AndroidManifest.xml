@@ -69,6 +69,7 @@
         <activity
             android:name=".GameFishActivity"
             android:label="@string/title_activity_game_fish"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
