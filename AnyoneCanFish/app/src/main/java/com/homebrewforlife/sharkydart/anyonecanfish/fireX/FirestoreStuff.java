@@ -152,7 +152,8 @@ public class FirestoreStuff {
         });
     }
     public void Firestore_Get_FishingTrips(final ArrayList<Fire_Trip> theFishingTrips){
-        mFS_Trips_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_trips));
+        mFS_Trips_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_users))
+                .document(mCurUser.getUid()).collection(mContext.getString(R.string.db_trips));
         mFS_Trips_collection_ref.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -160,14 +161,8 @@ public class FirestoreStuff {
                         if(theFishingTrips != null)
                             theFishingTrips.clear();
                         for (QueryDocumentSnapshot trip : queryDocumentSnapshots){
-                            Log.d("fart", trip.getId()
-                                    + " => " + trip.getString("desc")
-                                    + " => " + trip.getString("name")
-                                    + " => " + trip.getGeoPoint("geo_loc")
-                                    + " => " + trip.getTimestamp("dateStart")
-                                    + " => " + trip.getTimestamp("dateEnd")
-                            );
                             Fire_Trip bork = trip.toObject(Fire_Trip.class);
+                            bork.setUid(trip.getId());
                             Log.i("fart", bork.getQuickDescription());
                             if(theFishingTrips != null) {
                                 theFishingTrips.add(bork);
@@ -177,7 +172,7 @@ public class FirestoreStuff {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("fart", "trip collection grabbing error");
+                Log.e("fart", "trip collection grabbing error: " + e.toString());
             }
         });
     }
@@ -216,7 +211,8 @@ public class FirestoreStuff {
         });
     }
     public void Firestore_Get_TackleBoxes(final ArrayList<Fire_TackleBox> theTackleBoxes){
-        mFS_TackleBox_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_tackle_boxes));
+        mFS_TackleBox_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_users))
+                .document(mCurUser.getUid()).collection(mContext.getString(R.string.db_tackle_boxes));
         mFS_TackleBox_collection_ref.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -224,11 +220,8 @@ public class FirestoreStuff {
                         if(theTackleBoxes != null)
                             theTackleBoxes.clear();
                         for (QueryDocumentSnapshot tacklebox : queryDocumentSnapshots){
-                            Log.d("fart", tacklebox.getId()
-                                    + " => " + tacklebox.getString("desc")
-                                    + " => " + tacklebox.getString("name")
-                            );
                             Fire_TackleBox bork = tacklebox.toObject(Fire_TackleBox.class);
+                            bork.setUid(tacklebox.getId());
                             Log.i("fart", bork.getQuickDescription());
                             if(theTackleBoxes != null) {
                                 theTackleBoxes.add(bork);
@@ -238,7 +231,7 @@ public class FirestoreStuff {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("fart", "tacklebox collection grabbing error");
+                Log.e("fart", "tacklebox collection grabbing error: " + e.toString());
             }
         });
     }

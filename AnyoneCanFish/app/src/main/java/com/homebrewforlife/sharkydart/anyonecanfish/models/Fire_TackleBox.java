@@ -83,13 +83,16 @@ public class Fire_TackleBox implements Parcelable{
         StringBuilder builder = new StringBuilder();
         builder.append("Box: ").append(uid)
                 .append(" \n Name => ").append(name)
-                .append(" \n desc => ").append(desc)
-                .append(" \n lure count => ").append(theLures.size());
+                .append(" \n desc => ").append(desc);
         if(theLures != null){
+            builder.append(" \n lure count => ").append(theLures.size());
             for(Fire_Lure oneLure : theLures){
                 builder.append("\n").append(oneLure.getQuickDescription());
             }
         }
+        else
+            builder.append(" \n lure count => [ null ]");
+
         return builder.toString();
     }
 }
