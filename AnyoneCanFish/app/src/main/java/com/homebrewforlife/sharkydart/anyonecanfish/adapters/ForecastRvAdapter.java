@@ -42,7 +42,7 @@ public class ForecastRvAdapter extends RecyclerView.Adapter<ForecastRvAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        String temperature = mForecastPeriodArrayList.get(position).getTemperature() + ""
+        String temperature = mForecastPeriodArrayList.get(position).getTemperature() + " "
                 + mForecastPeriodArrayList.get(position).getTemperatureUnit();
         holder.mTvTemperature.setText(temperature);
         holder.mTvWindSpeed.setText(mForecastPeriodArrayList.get(position).getWindSpeed());
@@ -77,15 +77,6 @@ public class ForecastRvAdapter extends RecyclerView.Adapter<ForecastRvAdapter.Vi
             mImgWeatherIcon = view.findViewById(R.id.imgWeatherIcon);
             mTvPeriodName = view.findViewById(R.id.tvPeriodName);
             mTvShortForecast = view.findViewById(R.id.tvShortForecast);
-        }
-        public void bindData(final ForecastPeriod viewModel){
-            String temperature = viewModel.getTemperature() + "" + viewModel.getTemperatureUnit();
-            mTvTemperature.setText(temperature);
-            mTvWindSpeed.setText(viewModel.getWindSpeed());
-            mTvWindDirection.setText(viewModel.getWindDirection());
-            mTvShortForecast.setText(viewModel.getShortForecast());
-            mTvPeriodName.setText(viewModel.getName());
-            Picasso.get().load(viewModel.getIconURL()).into(mImgWeatherIcon);
         }
     }
 }
