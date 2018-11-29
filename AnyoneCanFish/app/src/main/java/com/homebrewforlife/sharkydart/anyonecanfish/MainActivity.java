@@ -140,8 +140,6 @@ public class MainActivity extends AppCompatActivity{
                                 Log.i("fart", "clicked Snackbar");
                             }
                         }).show();
-                //forcing a GPS refresh
-                verifyLocationPermissions(true);
                 Log.i("fart", "clicked FAB");
             }
         });
@@ -455,6 +453,12 @@ public class MainActivity extends AppCompatActivity{
         int id = item.getItemId();
 
         if (id == R.id.action_open_settings) {
+            return true;
+        }
+        else if(id == R.id.forcesync_forecast_data){
+            //forcing a GPS refresh
+            verifyLocationPermissions(true);
+            Toast.makeText(mContext,"Syncing...", Toast.LENGTH_SHORT).show();
             return true;
         }
         else if(id == R.id.action_firebase_signout){

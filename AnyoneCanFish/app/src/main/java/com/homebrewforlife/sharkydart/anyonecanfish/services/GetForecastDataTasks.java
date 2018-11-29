@@ -11,9 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.homebrewforlife.sharkydart.anyonecanfish.MainActivity;
-import com.homebrewforlife.sharkydart.anyonecanfish.R;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.ForecastPeriod;
-import com.homebrewforlife.sharkydart.anyonecanfish.models.MyForecast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
