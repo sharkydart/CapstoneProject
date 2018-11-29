@@ -188,15 +188,15 @@ public class MainActivity extends AppCompatActivity{
 
         mForecastRecyclerView = findViewById(R.id.rvWeatherDays);
         assert mForecastRecyclerView != null;
+        mForecastRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        SnapHelper snapHelper = new PagerSnapHelper();
+        mForecastRecyclerView.setLayoutManager(layoutManager);
+        snapHelper.attachToRecyclerView(mForecastRecyclerView);
 //        setupRecyclerView(mForecastRecyclerView);
     }
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         mForecastRvAdapter = new ForecastRvAdapter(this, mForecastPeriodsArrayList);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        SnapHelper snapHelper = new PagerSnapHelper();
-        recyclerView.setLayoutManager(layoutManager);
-        snapHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(mForecastRvAdapter);
     }
 
@@ -519,13 +519,6 @@ public class MainActivity extends AppCompatActivity{
                 mForecastPeriodsArrayList = intent.getParcelableArrayListExtra(GetForecastDataTasks.EXTRA_THE_FORECAST_DATA);
                 Log.d("fart","size= "+ mForecastPeriodsArrayList.size());
                 setupRecyclerView(mForecastRecyclerView);
-/*
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    public void run() {
-                        mBusinessAdapter.notifyDataSetChanged();
-                    }
-                });
-*/
             }
             else{
                 Log.d("fart", "broadcast: " + action);
