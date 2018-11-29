@@ -1,9 +1,13 @@
 package com.homebrewforlife.sharkydart.anyonecanfish.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
-public class Fire_FishEvent {
+public class Fire_FishEvent implements Parcelable {
+    private String uid;
     private Timestamp date;
     private String desc;
     private double latitude;
@@ -15,7 +19,8 @@ public class Fire_FishEvent {
 
     public Fire_FishEvent(){}
 
-    public Fire_FishEvent(Timestamp date, String desc, double latitude, double longitude, String image_url, Boolean released, String species) {
+    public Fire_FishEvent(String uid, Timestamp date, String desc, double latitude, double longitude, String image_url, Boolean released, String species) {
+        this.uid = uid;
         this.date = date;
         this.desc = desc;
         this.latitude = latitude;
@@ -25,7 +30,8 @@ public class Fire_FishEvent {
         this.species = species;
     }
 
-    public Fire_FishEvent(Timestamp date, String desc, String image_url, Boolean released, String species, GeoPoint geo_loc) {
+    public Fire_FishEvent(String uid, Timestamp date, String desc, String image_url, Boolean released, String species, GeoPoint geo_loc) {
+        this.uid = uid;
         this.date = date;
         this.desc = desc;
         this.image_url = image_url;
@@ -34,6 +40,44 @@ public class Fire_FishEvent {
         this.geo_loc = geo_loc;
         this.latitude = geo_loc.getLatitude();
         this.longitude = geo_loc.getLongitude();
+    }
+
+    private Fire_FishEvent(Parcel in){
+        this.uid = in.readString();
+        this.desc = in.readString();
+        this.species = in.readString();
+        this.released = (in.readInt() == 1);
+        this.image_url = in.readString();
+        this.date = in.readParcelable(Timestamp.class.getClassLoader());
+    }
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(uid);
+        out.writeString(desc);
+        out.writeString(species);
+        out.writeInt(released ? 1 : 0);
+        out.writeString(image_url);
+        out.writeParcelable(date, flags);
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    public static final Parcelable.Creator<Fire_FishEvent> CREATOR = new Parcelable.Creator<Fire_FishEvent>(){
+        public Fire_FishEvent createFromParcel(Parcel in){
+            return new Fire_FishEvent(in);
+        }
+        public Fire_FishEvent[] newArray(int size){
+            return new Fire_FishEvent[size];
+        }
+    };
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public GeoPoint getGeo_loc() {
@@ -98,5 +142,15 @@ public class Fire_FishEvent {
 
     public void setSpecies(String species) {
         this.species = species;
+    }
+
+    public String getQuickDescription(){
+        return  "FishEvent: " + uid
+                + "\ndate =>" + date
+                + "\ndesc =>" + desc
+                + "\nreleased =>" + released
+                + "\nspecies =>" + species
+                + "\ngeo_loc =>" + geo_loc.toString()
+                + "\nimg_url =>" + image_url;
     }
 }

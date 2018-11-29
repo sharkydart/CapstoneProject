@@ -49,12 +49,11 @@ public class WeatherInfoTasks {
 
         URL url = null;
         try {
-            Log.d("fart", "builtURI: " + builtUri.toString());//TODO remove
             url = new URL(builtUri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        }
 
+        }
         return url;
     }
     private static String getResponseFromUrl(URL url) throws IOException {
@@ -86,10 +85,14 @@ public class WeatherInfoTasks {
                 if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
                     URL firstWeatherAPIUrl = buildFirstWeatherAPIUrl(theContext, theLat, theLon);
                     try {
-                        parseFirstWeatherJSON(theContext, getResponseFromUrl(firstWeatherAPIUrl));
+                        Log.d("fart","trying getresponsefromurl: " + firstWeatherAPIUrl + "...");
+                        String response = getResponseFromUrl(firstWeatherAPIUrl);
+                        Log.d("fart","got response: " + response);
+                        Log.d("fart","trying parseFirstWeatherJSON...");
+                        parseFirstWeatherJSON(theContext, response);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(theContext, "First Weather Network #1", Toast.LENGTH_LONG).show();
+                        Log.e("fart", "weather json parse bork:" + e.toString());
                     }
                 }
             }

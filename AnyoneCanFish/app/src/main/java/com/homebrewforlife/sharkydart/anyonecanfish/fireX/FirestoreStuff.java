@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.homebrewforlife.sharkydart.anyonecanfish.R;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_FishEvent;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Lure;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
@@ -169,6 +170,9 @@ public class FirestoreStuff {
                             Log.d("fart", trip.getId()
                                     + " => " + trip.getString("desc")
                                     + " => " + trip.getString("name")
+                                    + " => " + trip.getGeoPoint("geo_loc")
+                                    + " => " + trip.getTimestamp("dateStart")
+                                    + " => " + trip.getTimestamp("dateEnd")
                             );
                             Fire_Trip bork = trip.toObject(Fire_Trip.class);
                             Log.i("fart", bork.getQuickDescription());
@@ -181,6 +185,40 @@ public class FirestoreStuff {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.e("fart", "trip collection grabbing error");
+            }
+        });
+    }
+    public void Firestore_Get_Trip_FishEvents(String uid_trip, final ArrayList<Fire_FishEvent> theFishEvents){
+        CollectionReference FS_Trip_FishEvents = mFS_Store
+                .collection(mContext.getString(R.string.db_trips))
+                .document(uid_trip)
+                .collection(mContext.getString(R.string.db_fish_events));
+        FS_Trip_FishEvents.get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(theFishEvents != null)
+                            theFishEvents.clear();
+                        for(QueryDocumentSnapshot fishEvent : queryDocumentSnapshots){
+                            Log.d("fart", fishEvent.getId()
+                                    + " => " + fishEvent.getTimestamp("date")
+                                    + " => " + fishEvent.getString("species")
+                                    + " => " + fishEvent.getString("desc")
+                                    + " => " + fishEvent.getBoolean("released")
+                                    + " => " + fishEvent.getGeoPoint("geo_loc")
+                                    + " => " + fishEvent.getString("image_url")
+                            );
+                            Fire_FishEvent bork = fishEvent.toObject(Fire_FishEvent.class);
+                            Log.i("fart", bork.getQuickDescription());
+                            if(theFishEvents != null) {
+                                theFishEvents.add(bork);
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("fart", "fishevents grabbing error");
             }
         });
     }

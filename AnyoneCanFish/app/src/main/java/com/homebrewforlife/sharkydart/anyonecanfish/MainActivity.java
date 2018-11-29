@@ -42,6 +42,7 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreStuff;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_FishEvent;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Trip;
@@ -82,10 +83,10 @@ public class MainActivity extends AppCompatActivity{
 
     ArrayList<Fire_GameFish> mGameFishArrayList;
     public static final String GAME_FISH_ARRAYLIST = "game-fish-array-list";
-    ArrayList<Fire_Trip> mFishingTrips;
-    public static final String FISHING_TRIPS_ARRAYLIST = "game-fish-array-list";
-    ArrayList<Fire_TackleBox> mTackleBoxes;
-    public static final String TACKLE_BOXES_ARRAYLIST = "game-fish-array-list";
+    ArrayList<Fire_Trip> mFishingTripsArray;
+    public static final String FISHING_TRIPS_ARRAYLIST = "fishing-trips-array-list";
+    ArrayList<Fire_TackleBox> mTackleBoxesArray;
+    public static final String TACKLE_BOXES_ARRAYLIST = "tackle-boxes-array-list";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity{
         mAuth = FirebaseAuth.getInstance();
 
         //verify location permissions and start getting location and weather data
-        verifyLocationPermissions();
+        verifyLocationPermissions(false);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +115,8 @@ public class MainActivity extends AppCompatActivity{
                                 Log.i("fart", "clicked Snackbar");
                             }
                         }).show();
+                //forcing a GPS refresh
+                verifyLocationPermissions(true);
                 Log.i("fart", "clicked FAB");
             }
         });
@@ -139,7 +142,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), FishingTripsActivity.class);
-                intent.putParcelableArrayListExtra(FISHING_TRIPS_ARRAYLIST, mFishingTrips);
+                intent.putParcelableArrayListExtra(FISHING_TRIPS_ARRAYLIST, mFishingTripsArray);
                 view.getContext().startActivity(intent);
             }
         });
@@ -147,7 +150,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), TackleBoxesActivity.class);
-                intent.putParcelableArrayListExtra(TACKLE_BOXES_ARRAYLIST, mTackleBoxes);
+                intent.putParcelableArrayListExtra(TACKLE_BOXES_ARRAYLIST, mTackleBoxesArray);
                 view.getContext().startActivity(intent);
             }
         });
@@ -166,7 +169,7 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private void verifyLocationPermissions(){
+    private void verifyLocationPermissions(boolean forceUpdate){
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -179,12 +182,19 @@ public class MainActivity extends AppCompatActivity{
         else{
             //try and get GPS coords, and send them back to get the weather
             GeoPoint coords = getCoordsFromSharedPrefs();
-            if(coords == null)
+            if(coords == null) {
                 Log.d("fart", "no coords in shared prefs");
-            else
+                startGettingLatLon();
+            }
+            else {   //use shared prefs to refresh weather, unless forceUpdate, in which case - get GPS coords again
                 Log.d("fart", "lat: " + coords.getLatitude() + ", lon:" + coords.getLongitude());
-
-            startGettingLatLon();
+                if(forceUpdate)     //button was clicked to refresh GPS
+                    startGettingLatLon();
+                else {    //button was not clicked to refresh
+                    //TODO - when we have first weather url, can skip and call 2nd weather
+                    startGettingFirstWeather(coords.getLatitude(), coords.getLongitude());
+                }
+            }
         }
     }
     private void saveCoordsToSharedPrefs(double lat, double lon){
@@ -196,7 +206,7 @@ public class MainActivity extends AppCompatActivity{
     private GeoPoint getCoordsFromSharedPrefs(){
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String lat = mSharedPreferences.getString(SHAREDPREFS_LAT, null);
-        String lon = mSharedPreferences.getString(SHAREDPREFS_LAT, null);
+        String lon = mSharedPreferences.getString(SHAREDPREFS_LON, null);
         GeoPoint coords;
         if(lat != null && lon != null)
             coords = new GeoPoint(Double.valueOf(lat), Double.valueOf(lon));
@@ -305,33 +315,26 @@ public class MainActivity extends AppCompatActivity{
                     }
                 });
     }
-    private void Firestore_Get_GameFish(){
-        mFS_GameFish_collection_ref = mFS_Store.collection(getString(R.string.db_game_fish));
-        mFS_GameFish_collection_ref.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            Log.d("fart", document.getId() + " => " + document.getData());
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("fart", "collection grabbing error");
-                    }
-                });
-    }
     private void Firestore_LoadData(){
         //firestore references
         mFS_Store = FirebaseFirestore.getInstance();
         //get specifically user firestore db data
         FirebaseGetUserInfo();
-        //get specifically game_fish firestore db data
-//        Firestore_Get_GameFish();
-        mGameFishArrayList = new ArrayList<Fire_GameFish>();
+
         FirestoreStuff myFirestore = new FirestoreStuff(mContext,mCurUser,mFS_Store);
+        //get specifically game_fish firestore db data
+        mGameFishArrayList = new ArrayList<Fire_GameFish>();
         myFirestore.Firestore_Get_GameFish(mGameFishArrayList);
+
+        //get specifically TackleBoxes firestore db data
+        //TODO - "trip collection grabbing error"
+        mFishingTripsArray = new ArrayList<Fire_Trip>();
+        myFirestore.Firestore_Get_FishingTrips(mFishingTripsArray);
+
+        //get specifically FishingTrips firestore db data
+        //TODO - "tacklebox collection grabbing error"
+        mTackleBoxesArray = new ArrayList<Fire_TackleBox>();
+        myFirestore.Firestore_Get_TackleBoxes(mTackleBoxesArray);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -367,7 +370,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
 //    TODO - 2) get weather data: forecast temperature      (api.weather.gov)
-//    TODO -    2a: if a trip is selected (settings), use that info to query, otherwise, get current GPS coords
 //    TODO -    2b: 1st query - get 'office' and 'grid position'.  2nd query - get forecast data
 
 //    TODO - 3) get weather data: one day sun and moon data (api.usno.navy.mil/rstt/oneday)
@@ -449,8 +451,12 @@ public class MainActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         Log.d("fart", "onDestroy called");
-        unregisterReceiver(mLocReceiver);
-        unregisterReceiver(mWeatherFirstReceiver);
+        try {
+            unregisterReceiver(mLocReceiver);
+            unregisterReceiver(mWeatherFirstReceiver);
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
     }
 
     /*
