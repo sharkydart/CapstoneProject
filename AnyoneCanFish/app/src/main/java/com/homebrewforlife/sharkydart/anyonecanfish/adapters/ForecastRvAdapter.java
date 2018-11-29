@@ -57,7 +57,6 @@ public class ForecastRvAdapter extends RecyclerView.Adapter<ForecastRvAdapter.Vi
 
     @Override
     public int getItemCount() {
-        Log.d("fart", "count: " + mForecastPeriodArrayList.size());
         return mForecastPeriodArrayList.size();
     }
 

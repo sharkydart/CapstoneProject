@@ -38,18 +38,24 @@ L = Lower Transit (above the horizon)
     private ArrayList<SolunarPhenomena> moondata;
     private String fracillum;
     private String curphase;
+    private String closestPhase;
+    private String dayOfWeek;
 
     public SolunarData(){}
 
-    public SolunarData(ArrayList<SolunarPhenomena> sundata, ArrayList<SolunarPhenomena> moondata, String fracillum, String curphase) {
+    public SolunarData(ArrayList<SolunarPhenomena> sundata, ArrayList<SolunarPhenomena> moondata, String fracillum, String curphase, String closestPhase, String dayOfWeek) {
         this.sundata = sundata;
         this.moondata = moondata;
         this.fracillum = fracillum;
         this.curphase = curphase;
+        this.closestPhase = closestPhase;
+        this.dayOfWeek = dayOfWeek;
     }
     private SolunarData(Parcel in){
         this.fracillum = in.readString();
         this.curphase = in.readString();
+        this.closestPhase = in.readString();
+        this.dayOfWeek = in.readString();
         ArrayList<SolunarPhenomena> in_sun = new ArrayList<>();
         in.readList(in_sun, getClass().getClassLoader());
         this.setSundata(in_sun);
@@ -61,6 +67,8 @@ L = Lower Transit (above the horizon)
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(fracillum);
         out.writeString(curphase);
+        out.writeString(closestPhase);
+        out.writeString(dayOfWeek);
         out.writeList(sundata);
         out.writeList(moondata);
     }
@@ -77,6 +85,21 @@ L = Lower Transit (above the horizon)
         }
     };
 
+    public String getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public String getClosestPhase() {
+        return closestPhase;
+    }
+
+    public void setClosestPhase(String closestPhase) {
+        this.closestPhase = closestPhase;
+    }
 
     public ArrayList<SolunarPhenomena> getSundata() {
         return sundata;
@@ -113,7 +136,9 @@ L = Lower Transit (above the horizon)
     public String getQuickDescription() {
         StringBuilder builder = new StringBuilder();
         builder.append("curphase: ").append(curphase)
-                .append(" \n Fracillum => ").append(fracillum);
+                .append(" \n Day of Week => ").append(dayOfWeek)
+                .append(" \n Fracillum => ").append(fracillum)
+                .append(" \n Closest Phase => ").append(closestPhase);
 
         if(sundata != null){
             builder.append(" \n sun phenomena count => ").append(sundata.size());

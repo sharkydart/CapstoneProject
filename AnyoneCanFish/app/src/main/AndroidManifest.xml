@@ -63,8 +63,10 @@
         <service
             android:name=".services.GetForecastDataService"
             android:exported="false" />
+        <service
+            android:name=".services.GetSolunarDataService"
+            android:exported="false" />
         <!-- <service android:name=".services.FirebaseService" android:exported="false" /> -->
-        <!-- <service android:name=".services.SunMoonService" android:exported="false" /> -->
 
         <activity
             android:name=".GameFishActivity"

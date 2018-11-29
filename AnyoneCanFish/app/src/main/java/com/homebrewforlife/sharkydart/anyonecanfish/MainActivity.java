@@ -47,17 +47,24 @@ import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Trip;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.ForecastPeriod;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.SolunarData;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.GetForecastDataService;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.GetForecastDataTasks;
+import com.homebrewforlife.sharkydart.anyonecanfish.services.GetSolunarDataService;
+import com.homebrewforlife.sharkydart.anyonecanfish.services.GetSolunarDataTasks;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationService;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.LocationTasks;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.WeatherInfoService;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.WeatherInfoTasks;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -71,6 +78,7 @@ public class MainActivity extends AppCompatActivity{
     public static final String SHAREDPREFS_LAT = "sharedpreferences-lat";
     public static final String SHAREDPREFS_LON = "sharedpreferences-lon";
     public static final String RAW_FORECAST_DATA_SHAREDPREFS_CACHE = "raw-forecast-data-cache";
+    public static final String RAW_SOLUNAR_DATA_SHAREDPREFS_CACHE = "raw-solunar-data-cache";
     SharedPreferences mSharedPreferences;
 
     //Receivers and Intent Filters
@@ -80,6 +88,8 @@ public class MainActivity extends AppCompatActivity{
     IntentFilter mWeatherFirstReceiverFilter;
     MainForecastReceiver mForecastReceiver;
     IntentFilter mForecastReceiverFilter;
+    MainSolunarReceiver mSolunarReceiver;
+    IntentFilter mSolunarReceiverFilter;
 
     //Firebase Authentication
     FirebaseAuth mAuth;
@@ -89,6 +99,9 @@ public class MainActivity extends AppCompatActivity{
     FirebaseFirestore mFS_Store;
     DocumentReference mFS_User_document_ref;
     CollectionReference mFS_GameFish_collection_ref;
+
+    //Solunar Data
+    SolunarData mSolunarDataObj;
 
     //weather recyclerView
     ArrayList<ForecastPeriod> mForecastPeriodsArrayList;
@@ -274,7 +287,7 @@ public class MainActivity extends AppCompatActivity{
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         return mSharedPreferences.getString(FORECAST_URL_SHAREDPREFS_CACHE, null);
     }
-    public String getLastForecastCITYFromSharedPrefs(){
+    public String getForecastCITYFromSharedPrefs(){
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         return mSharedPreferences.getString(CITY_SHAREDPREFS_CACHE, null);
     }
@@ -311,6 +324,20 @@ public class MainActivity extends AppCompatActivity{
         getForecastIntent.putExtra(GetForecastDataTasks.EXTRA_THE_FORECAST_API_URL, theForecastApiUrl);
         getForecastIntent.setAction(GetForecastDataTasks.ACTION_GET_FORECAST_DATA);
         startService(getForecastIntent);
+    }
+    private void startGettingSolunarData(String theDate, double theLat, double theLon, int theTimeZone){
+        mSolunarReceiverFilter = new IntentFilter();
+        mSolunarReceiverFilter.addAction(GetSolunarDataTasks.ACTION_FOUND_SOLUNAR_DATA);
+        mSolunarReceiver = new MainSolunarReceiver();
+        mContext.registerReceiver(mSolunarReceiver, mSolunarReceiverFilter);
+
+        Intent getSolunarIntent = new Intent(this, GetSolunarDataService.class);
+        getSolunarIntent.putExtra(GetSolunarDataTasks.EXTRA_SOLUNAR_DATE, theDate);
+        getSolunarIntent.putExtra(GetSolunarDataTasks.EXTRA_SOLUNAR_LAT, theLat);
+        getSolunarIntent.putExtra(GetSolunarDataTasks.EXTRA_SOLUNAR_LON, theLon);
+        getSolunarIntent.putExtra(GetSolunarDataTasks.EXTRA_SOLUNAR_TZ, theTimeZone);
+        getSolunarIntent.setAction(GetSolunarDataTasks.ACTION_GET_SOLUNAR_DATA);
+        startService(getSolunarIntent);
     }
 
     @Override
@@ -486,6 +513,18 @@ public class MainActivity extends AppCompatActivity{
                 Log.d("fart","calling 'startGettingFirstWeather' with Coordinates: " + theLat + ", " + theLon);
                 ((TextView)findViewById(R.id.tvTempGPSDisplay)).setText(String.format(Locale.US,"%f, %f",theLat,theLon));
                 startGettingFirstWeather(theLat, theLon);
+
+                //need to get current date/time and simplify it
+                Date c = Calendar.getInstance().getTime();
+                System.out.println("Current time => " + c);
+                SimpleDateFormat df = new SimpleDateFormat("MM/dd/YYYY", Locale.US);
+                String theDate = df.format(c);
+                Log.d("fart", "thedate: " + theDate);
+
+                //need current timezone offset, from milliseconds to hours, as integer
+                int theTimeZone = TimeZone.getDefault().getRawOffset() / 1000 / 60 / 60;
+                Log.d("fart", "timezoneoffset: " + theTimeZone);
+                startGettingSolunarData(theDate, theLat, theLon, theTimeZone);
             }
             else{
                 Log.d("fart", "broadcast: " + action);
@@ -521,8 +560,22 @@ public class MainActivity extends AppCompatActivity{
             String action = intent.getAction();
             if(GetForecastDataTasks.ACTION_FOUND_FORECAST_DATA.equals(action)){
                 mForecastPeriodsArrayList = intent.getParcelableArrayListExtra(GetForecastDataTasks.EXTRA_THE_FORECAST_DATA);
-                Log.d("fart","size= "+ mForecastPeriodsArrayList.size());
                 setupRecyclerView(mForecastRecyclerView);
+            }
+            else{
+                Log.d("fart", "broadcast: " + action);
+            }
+        }
+    }
+    //MainSolunarReceiver
+    private class MainSolunarReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("fart", "[[Solunar API call]] Received Something...");
+            String action = intent.getAction();
+            if(GetSolunarDataTasks.ACTION_FOUND_SOLUNAR_DATA.equals(action)){
+                mSolunarDataObj = intent.getParcelableExtra(GetSolunarDataTasks.EXTRA_THE_SOLUNAR_DATA);
+                Log.d("fart", "solunar data: " + mSolunarDataObj.getQuickDescription());
             }
             else{
                 Log.d("fart", "broadcast: " + action);
@@ -550,6 +603,7 @@ public class MainActivity extends AppCompatActivity{
             unregisterReceiver(mForecastReceiver);
             unregisterReceiver(mLocReceiver);
             unregisterReceiver(mWeatherFirstReceiver);
+            unregisterReceiver(mSolunarReceiver);
         }catch (IllegalArgumentException e){
             e.printStackTrace();
         }

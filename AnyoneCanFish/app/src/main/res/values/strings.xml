@@ -13,7 +13,10 @@
     <string name="mainmenu_signout">Sign Out</string>
 
     <!-- complete sun and moon data for one day -->
-    <string name="solunar_api_baseurl">https://api.usno.navy.mil/rstt/oneday?</string>
+    <string name="solunar_api_baseurl">https://api.usno.navy.mil/rstt/oneday</string>
+    <string name="solunar_param_date">date</string>
+    <string name="solunar_param_coords">coords</string>
+    <string name="solunar_param_timezone">tz</string>
     <string name="first_weather_api_baseurl">https://api.weather.gov/points/</string>
 
     <!-- Firebase Firestore Database Collections-->
