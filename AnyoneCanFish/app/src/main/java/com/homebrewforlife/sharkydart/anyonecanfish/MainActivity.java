@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity{
         mContext = this;
 
         // Enable Firestore logging
-        FirestoreWarningFromDevs();
         FirebaseFirestore.setLoggingEnabled(true);
         mAuth = FirebaseAuth.getInstance();
 
@@ -445,6 +444,7 @@ public class MainActivity extends AppCompatActivity{
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
+                FirestoreWarningFromDevs();
                 // Successfully signed in
                 Firestore_LoadData();
             }

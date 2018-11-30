@@ -175,6 +175,7 @@ public class GetSolunarDataTasks {
 
     private static void saveRawSolunarDataStringToSharedPrefs(Context theContext, String theRawSolunarData){
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(theContext).edit();
+        Log.d("fart", "solunardata:" + theRawSolunarData);
         editor.putString(MainActivity.RAW_SOLUNAR_DATA_SHAREDPREFS_CACHE, theRawSolunarData);
         editor.apply();
     }

@@ -130,110 +130,131 @@ public class FirestoreStuff {
                 });
     }
     public void Firestore_Get_GameFish(final ArrayList<Fire_GameFish> theGameFish){
-        mFS_GameFish_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_game_fish));
-        mFS_GameFish_collection_ref.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(theGameFish != null)
-                            theGameFish.clear();
-                        for (QueryDocumentSnapshot gamefish : queryDocumentSnapshots) {
-                            Fire_GameFish bork = gamefish.toObject(Fire_GameFish.class);
-                            if(theGameFish != null) {
-                                theGameFish.add(bork);
+        try {
+            mFS_GameFish_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_game_fish));
+            mFS_GameFish_collection_ref.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (theGameFish != null)
+                                theGameFish.clear();
+                            for (QueryDocumentSnapshot gamefish : queryDocumentSnapshots) {
+                                Fire_GameFish bork = gamefish.toObject(Fire_GameFish.class);
+                                if (theGameFish != null) {
+                                    theGameFish.add(bork);
+                                }
                             }
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("fart", "collection grabbing error");
-            }
-        });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("fart", "collection grabbing error");
+                }
+            });
+        }
+        catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
     public void Firestore_Get_FishingTrips(final ArrayList<Fire_Trip> theFishingTrips){
-        mFS_Trips_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_users))
-                .document(mCurUser.getUid()).collection(mContext.getString(R.string.db_trips));
-        mFS_Trips_collection_ref.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(theFishingTrips != null)
-                            theFishingTrips.clear();
-                        for (QueryDocumentSnapshot trip : queryDocumentSnapshots){
-                            Fire_Trip bork = trip.toObject(Fire_Trip.class);
-                            bork.setUid(trip.getId());
-                            Log.i("fart", bork.getQuickDescription());
-                            if(theFishingTrips != null) {
-                                theFishingTrips.add(bork);
+        try{
+            mFS_Trips_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_users))
+                    .document(mCurUser.getUid()).collection(mContext.getString(R.string.db_trips));
+            mFS_Trips_collection_ref.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (theFishingTrips != null)
+                                theFishingTrips.clear();
+                            for (QueryDocumentSnapshot trip : queryDocumentSnapshots) {
+                                Fire_Trip bork = trip.toObject(Fire_Trip.class);
+                                bork.setUid(trip.getId());
+                                Log.i("fart", bork.getQuickDescription());
+                                if (theFishingTrips != null) {
+                                    theFishingTrips.add(bork);
+                                }
                             }
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("fart", "trip collection grabbing error: " + e.toString());
-            }
-        });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("fart", "trip collection grabbing error: " + e.toString());
+                }
+            });
+        }
+        catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
     public void Firestore_Get_Trip_FishEvents(String uid_trip, final ArrayList<Fire_FishEvent> theFishEvents){
-        CollectionReference FS_Trip_FishEvents = mFS_Store
-                .collection(mContext.getString(R.string.db_trips))
-                .document(uid_trip)
-                .collection(mContext.getString(R.string.db_fish_events));
-        FS_Trip_FishEvents.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(theFishEvents != null)
-                            theFishEvents.clear();
-                        for(QueryDocumentSnapshot fishEvent : queryDocumentSnapshots){
-                            Log.d("fart", fishEvent.getId()
-                                    + " => " + fishEvent.getTimestamp("date")
-                                    + " => " + fishEvent.getString("species")
-                                    + " => " + fishEvent.getString("desc")
-                                    + " => " + fishEvent.getBoolean("released")
-                                    + " => " + fishEvent.getGeoPoint("geo_loc")
-                                    + " => " + fishEvent.getString("image_url")
-                            );
-                            Fire_FishEvent bork = fishEvent.toObject(Fire_FishEvent.class);
-                            Log.i("fart", bork.getQuickDescription());
-                            if(theFishEvents != null) {
-                                theFishEvents.add(bork);
+        try
+        {
+            CollectionReference FS_Trip_FishEvents = mFS_Store
+                    .collection(mContext.getString(R.string.db_trips))
+                    .document(uid_trip)
+                    .collection(mContext.getString(R.string.db_fish_events));
+            FS_Trip_FishEvents.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if(theFishEvents != null)
+                                theFishEvents.clear();
+                            for(QueryDocumentSnapshot fishEvent : queryDocumentSnapshots){
+                                Log.d("fart", fishEvent.getId()
+                                        + " => " + fishEvent.getTimestamp("date")
+                                        + " => " + fishEvent.getString("species")
+                                        + " => " + fishEvent.getString("desc")
+                                        + " => " + fishEvent.getBoolean("released")
+                                        + " => " + fishEvent.getGeoPoint("geo_loc")
+                                        + " => " + fishEvent.getString("image_url")
+                                );
+                                Fire_FishEvent bork = fishEvent.toObject(Fire_FishEvent.class);
+                                Log.i("fart", bork.getQuickDescription());
+                                if(theFishEvents != null) {
+                                    theFishEvents.add(bork);
+                                }
                             }
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("fart", "fishevents grabbing error");
-            }
-        });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("fart", "fishevents grabbing error");
+                }
+            });
+        }
+        catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
     public void Firestore_Get_TackleBoxes(final ArrayList<Fire_TackleBox> theTackleBoxes){
-        mFS_TackleBox_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_users))
-                .document(mCurUser.getUid()).collection(mContext.getString(R.string.db_tackle_boxes));
-        mFS_TackleBox_collection_ref.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(theTackleBoxes != null)
-                            theTackleBoxes.clear();
-                        for (QueryDocumentSnapshot tacklebox : queryDocumentSnapshots){
-                            Fire_TackleBox bork = tacklebox.toObject(Fire_TackleBox.class);
-                            bork.setUid(tacklebox.getId());
-                            Log.i("fart", bork.getQuickDescription());
-                            if(theTackleBoxes != null) {
-                                theTackleBoxes.add(bork);
+        try{
+            mFS_TackleBox_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_users))
+                    .document(mCurUser.getUid()).collection(mContext.getString(R.string.db_tackle_boxes));
+            mFS_TackleBox_collection_ref.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if(theTackleBoxes != null)
+                                theTackleBoxes.clear();
+                            for (QueryDocumentSnapshot tacklebox : queryDocumentSnapshots){
+                                Fire_TackleBox bork = tacklebox.toObject(Fire_TackleBox.class);
+                                bork.setUid(tacklebox.getId());
+                                Log.i("fart", bork.getQuickDescription());
+                                if(theTackleBoxes != null) {
+                                    theTackleBoxes.add(bork);
+                                }
                             }
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("fart", "tacklebox collection grabbing error: " + e.toString());
-            }
-        });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("fart", "tacklebox collection grabbing error: " + e.toString());
+                }
+            });
+        }
+        catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
     public void Firestore_Get_TackleBox_Lures(String uid_tacklebox, final ArrayList<Fire_Lure> theLures){
         CollectionReference FS_tacklebox_lures = mFS_Store
