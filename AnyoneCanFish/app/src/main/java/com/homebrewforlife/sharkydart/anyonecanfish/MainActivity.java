@@ -260,6 +260,7 @@ public class MainActivity extends AppCompatActivity{
         }
     }
     private void saveCoordsToSharedPrefs(double lat, double lon){
+        mSharedPreferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(SHAREDPREFS_LAT, Double.toString(lat));
         editor.putString(SHAREDPREFS_LON, Double.toString(lon));

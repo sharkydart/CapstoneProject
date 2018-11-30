@@ -150,9 +150,17 @@ public class GetSolunarDataTasks {
                 solunarData.setDayOfWeek(dayofweek);
                 String closestPhase = solDataObj.getJSONObject("closestphase").getString("phase");
                 solunarData.setClosestPhase(closestPhase);
-                String fracillum = solDataObj.getString("fracillum");
+
+                //there might not be a fracillum
+                String fracillum = "";
+                if(solDataObj.has("fracillum"))
+                    fracillum = solDataObj.getString("fracillum");
                 solunarData.setFracillum(fracillum);
-                String curphase = solDataObj.getString("curphase");
+
+                //there might not be a curphase
+                String curphase = "";
+                if(solDataObj.has("curphase"))
+                    curphase = solDataObj.getString("curphase");
                 solunarData.setCurphase(curphase);
 
                 saveRawSolunarDataStringToSharedPrefs(theContext, solunarJSONData);
@@ -175,11 +183,11 @@ public class GetSolunarDataTasks {
 
     private static void saveRawSolunarDataStringToSharedPrefs(Context theContext, String theRawSolunarData){
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(theContext).edit();
-        Log.d("fart", "solunardata:" + theRawSolunarData);
         editor.putString(MainActivity.RAW_SOLUNAR_DATA_SHAREDPREFS_CACHE, theRawSolunarData);
         editor.apply();
     }
 
+    //required because whoever is in charge of the certs is slipping
     private static String dealWithInvalidCertificateIssue(Context theContext, URL theUrl) throws IOException{
         try {
             // Load CAs from an InputStream

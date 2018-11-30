@@ -190,9 +190,17 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
                 solunarData.setDayOfWeek(dayofweek);
                 String closestPhase = solDataObj.getJSONObject("closestphase").getString("phase");
                 solunarData.setClosestPhase(closestPhase);
-                String fracillum = solDataObj.getString("fracillum");
+
+                //there might not be a fracillum
+                String fracillum = "";
+                if(solDataObj.has("fracillum"))
+                    fracillum = solDataObj.getString("fracillum");
                 solunarData.setFracillum(fracillum);
-                String curphase = solDataObj.getString("curphase");
+
+                //there might not be a curphase
+                String curphase = "";
+                if(solDataObj.has("curphase"))
+                    curphase = solDataObj.getString("curphase");
                 solunarData.setCurphase(curphase);
 
                 return solunarData;
