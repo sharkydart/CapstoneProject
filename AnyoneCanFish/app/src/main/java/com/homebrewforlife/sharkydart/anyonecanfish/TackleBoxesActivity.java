@@ -1,16 +1,27 @@
 package com.homebrewforlife.sharkydart.anyonecanfish;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
+
+import com.homebrewforlife.sharkydart.anyonecanfish.adapters.TackleBoxesRVAdapter;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
+
+import java.util.ArrayList;
 
 public class TackleBoxesActivity extends AppCompatActivity {
+
+    ArrayList<Fire_TackleBox> mTackleBoxArrayList;
+    TackleBoxesRVAdapter mTackleBoxRVAdapter;
+    RecyclerView mTackleBoxRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +35,40 @@ public class TackleBoxesActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Open a new tackle box!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        if(savedInstanceState == null){
+            mTackleBoxArrayList = new ArrayList<>();
+        }else if(savedInstanceState.containsKey(MainActivity.TACKLE_BOXES_ARRAYLIST)){
+            mTackleBoxArrayList = savedInstanceState.getParcelableArrayList(MainActivity.TACKLE_BOXES_ARRAYLIST);
+        }
+
+        Intent intent = getIntent();
+        if (intent == null) {
+            closeOnError();
+        }else {
+            mTackleBoxArrayList = intent.getParcelableArrayListExtra(MainActivity.TACKLE_BOXES_ARRAYLIST);
+        }
+
+        mTackleBoxRV = findViewById(R.id.rvTackleBoxes);
+        assert mTackleBoxRV != null;
+        setupRecyclerView(mTackleBoxRV);
+    }
+
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        mTackleBoxRVAdapter = new TackleBoxesRVAdapter(this, mTackleBoxArrayList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mTackleBoxRVAdapter);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(MainActivity.TACKLE_BOXES_ARRAYLIST, mTackleBoxArrayList);
+    }
+
+    private void closeOnError() {
+        finish();
+        Toast.makeText(this, "Can't find Game Fish", Toast.LENGTH_SHORT).show();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

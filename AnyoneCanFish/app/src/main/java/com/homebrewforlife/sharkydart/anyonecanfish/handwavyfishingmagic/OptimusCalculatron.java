@@ -23,11 +23,17 @@ public class OptimusCalculatron {
             start = start * 0.6;
 
         //if windspeed(-mph) is >= 6 and <= 16
-        String windSpd = thePeriod.getWindSpeed().replace("mph","");
-        Double wndSpd = Double.valueOf(windSpd);
-        if(wndSpd >= 6 && wndSpd <= 16)
-            start = start * 1.12;
-
+        if(thePeriod.getWindSpeed().contains("to")) {
+            String[] spds = thePeriod.getWindSpeed().split("to");
+            if (Double.valueOf(spds[0].replace("mph","")) >= 6 && Double.valueOf(spds[1].replace("mph","")) <= 16)
+                start = start * 1.12;
+        }
+        else {
+            String windSpd = thePeriod.getWindSpeed().replace("mph", "");
+            Double wndSpd = Double.valueOf(windSpd);
+            if (wndSpd >= 6 && wndSpd <= 16)
+                start = start * 1.12;
+        }
         if(thePeriod.getWindDirection().contains("W"))
             start = start * 1.12;
         if(thePeriod.getWindDirection().contains("E"))

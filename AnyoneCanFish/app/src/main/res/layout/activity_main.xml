@@ -5,22 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="2dp">
+
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/theCollapsingToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-            <TextView
-                android:id="@+id/tvTempGPSDisplay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="top|start"
-                tools:text="LOCATION"/>
             <android.support.v7.widget.Toolbar
                 android:id="@+id/theMainToolbar"
                 android:layout_width="match_parent"
@@ -36,14 +32,13 @@
                     android:layout_gravity="start|center_vertical"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/logo" />
+
                 <ImageView
                     android:layout_width="@dimen/navicon_size"
                     android:layout_height="@dimen/navicon_size"
                     android:layout_gravity="center_vertical"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:src="@drawable/fish_001"
-                    android:contentDescription="@string/app_name" />
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/fish_001" />
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

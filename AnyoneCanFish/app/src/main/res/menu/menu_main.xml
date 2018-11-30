@@ -8,9 +8,9 @@
         android:title=""
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_open_settings"
+        android:id="@+id/action_open_map"
         android:orderInCategory="1"
-        android:title="@string/mainmenu_settings"
+        android:title="@string/mainmenu_map"
         />
     <item
         android:id="@+id/action_firebase_signout"

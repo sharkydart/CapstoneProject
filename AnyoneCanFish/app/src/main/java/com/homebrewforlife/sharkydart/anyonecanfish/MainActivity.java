@@ -119,11 +119,15 @@ public class MainActivity extends AppCompatActivity{
 
     //console message from firestore warned to include this code
     private void FirestoreWarningFromDevs(){
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        firestore.setFirestoreSettings(settings);
+        try {
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                    .setTimestampsInSnapshotsEnabled(true)
+                    .build();
+            firestore.setFirestoreSettings(settings);
+        }catch(IllegalStateException e){
+            e.printStackTrace();
+        }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +160,26 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        if(savedInstanceState == null){
+            mForecastPeriodsArrayList = new ArrayList<>();
+        }else if(savedInstanceState.containsKey(MainActivity.FORECAST_ARRAYLIST)){
+            mForecastPeriodsArrayList = savedInstanceState.getParcelableArrayList(MainActivity.FORECAST_ARRAYLIST);
+        }
+
+        mForecastRecyclerView = findViewById(R.id.rvWeatherDays);
+        assert mForecastRecyclerView != null;
+        mForecastRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        SnapHelper snapHelper = new PagerSnapHelper();
+        mForecastRecyclerView.setLayoutManager(layoutManager);
+        snapHelper.attachToRecyclerView(mForecastRecyclerView);
+//        setupRecyclerView(mForecastRecyclerView);
+    }
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        mForecastRvAdapter = new ForecastRvAdapter(this, mForecastPeriodsArrayList);
+        recyclerView.setAdapter(mForecastRvAdapter);
+    }
+    private void setupOnClickListenersThatDependOnFirestore(){
         //handle the clicks
         findViewById(R.id.mcFishingBasics).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,25 +213,6 @@ public class MainActivity extends AppCompatActivity{
                 view.getContext().startActivity(intent);
             }
         });
-
-        if(savedInstanceState == null){
-            mForecastPeriodsArrayList = new ArrayList<>();
-        }else if(savedInstanceState.containsKey(MainActivity.FORECAST_ARRAYLIST)){
-            mForecastPeriodsArrayList = savedInstanceState.getParcelableArrayList(MainActivity.FORECAST_ARRAYLIST);
-        }
-
-        mForecastRecyclerView = findViewById(R.id.rvWeatherDays);
-        assert mForecastRecyclerView != null;
-        mForecastRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        SnapHelper snapHelper = new PagerSnapHelper();
-        mForecastRecyclerView.setLayoutManager(layoutManager);
-        snapHelper.attachToRecyclerView(mForecastRecyclerView);
-//        setupRecyclerView(mForecastRecyclerView);
-    }
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mForecastRvAdapter = new ForecastRvAdapter(this, mForecastPeriodsArrayList);
-        recyclerView.setAdapter(mForecastRvAdapter);
     }
 
     @Override
@@ -241,11 +246,6 @@ public class MainActivity extends AppCompatActivity{
                 startGettingLatLon();
             }
             else {   //use shared prefs to refresh weather, unless forceUpdate, in which case - get GPS coords again
-                if(((TextView)findViewById(R.id.tvTempGPSDisplay)).getText().toString().isEmpty()){
-                    String temp = coords.getLatitude() + ", " + coords.getLongitude();
-                    ((TextView)findViewById(R.id.tvTempGPSDisplay)).setText(temp);
-                }
-
                 if(forceUpdate){     //button was clicked to refresh GPS
                     startGettingLatLon();
                 }
@@ -433,9 +433,10 @@ public class MainActivity extends AppCompatActivity{
         myFirestore.Firestore_Get_FishingTrips(mFishingTripsArray);
 
         //get specifically FishingTrips firestore db data
-        //TODO - "tacklebox collection grabbing error"
         mTackleBoxesArray = new ArrayList<Fire_TackleBox>();
         myFirestore.Firestore_Get_TackleBoxes(mTackleBoxesArray);
+
+        setupOnClickListenersThatDependOnFirestore();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -480,7 +481,7 @@ public class MainActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_open_settings) {
+        if (id == R.id.action_open_map) {
             return true;
         }
         else if(id == R.id.forcesync_forecast_data){
@@ -511,8 +512,6 @@ public class MainActivity extends AppCompatActivity{
                 theLat = intent.getDoubleExtra(LocationTasks.EXTRA_LATITUDE, -99);
                 theLon = intent.getDoubleExtra(LocationTasks.EXTRA_LONGITUDE, -99);
                 saveCoordsToSharedPrefs(theLat, theLon);
-                Log.d("fart","calling 'startGettingFirstWeather' with Coordinates: " + theLat + ", " + theLon);
-                ((TextView)findViewById(R.id.tvTempGPSDisplay)).setText(String.format(Locale.US,"%f, %f",theLat,theLon));
                 startGettingFirstWeather(theLat, theLon);
 
                 //need to get current date/time and simplify it

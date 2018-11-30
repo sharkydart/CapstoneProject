@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.homebrewforlife.sharkydart.anyonecanfish.MainActivity;
 import com.homebrewforlife.sharkydart.anyonecanfish.R;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.ForecastPeriod;
+import com.squareup.picasso.Picasso;
 
 /**
  * Implementation of App Widget functionality.
@@ -54,6 +55,11 @@ public class FishingWidgetProvider extends AppWidgetProvider {
                     AppWidgetManager aWM = AppWidgetManager.getInstance(theContext);
                     int[] appWidgetIds = aWM.getAppWidgetIds(new ComponentName(theContext, FishingWidgetProvider.class));
                     RemoteViews remoteView = new RemoteViews(theContext.getPackageName(), R.layout.fishing_widget_provider_layout);
+
+                    Picasso.get()
+                            .load(mMyForecastPeriod.getIconURL())
+                            .into(remoteView, R.id.widgetForecastIcon, appWidgetIds);
+
                     for (int widgetId : appWidgetIds) {
                         aWM.notifyAppWidgetViewDataChanged(widgetId, R.id.widget_list);
                     }

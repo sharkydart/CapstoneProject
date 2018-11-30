@@ -1,5 +1,7 @@
 package com.homebrewforlife.sharkydart.anyonecanfish.widget;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -61,54 +63,46 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
     public RemoteViews getViewAt(int position) {
         RemoteViews remoteView = new RemoteViews(theContext.getPackageName(), R.layout.fishing_widget_forecast_detail);
 
-//        remoteView.setTextViewText(android.R.id.text1, collection.get(position).getTheName());
-//        if(FishingWidgetProvider.mTheIngredients != null && FishingWidgetProvider.mTheIngredients.size() > 0) {
-//            remoteView.setTextViewText(android.R.id.text1, FishingWidgetProvider.mTheIngredients.get(position).getInfo());
-//            remoteView.setTextColor(android.R.id.text1, Color.BLUE);
-//            final Intent thisIntent = new Intent();
-//            thisIntent.setAction(FishingWidgetProvider.ACTION_GOBACK);
-//            remoteView.setOnClickFillInIntent(android.R.id.text1, thisIntent);
-//        }
-//        else {
-        ImageView img = new ImageView(theContext);
-        Picasso.get().load(myForecastObj.get(position).getIconURL()).into(img);
-            remoteView.setImageViewResource(R.id.widgetForecastIcon, img.getId());
+        AppWidgetManager aWM = AppWidgetManager.getInstance(theContext);
+        int[] appWidgetIds = aWM.getAppWidgetIds(new ComponentName(theContext, FishingWidgetProvider.class));
+
+
 //            if(goodChancesToday(position) == 1)
 //                remoteView.setImageViewResource(R.id.widgetOutlookImg, );
 
         Log.d("fart", "firing up OptimusCalculatron: " +
-                OptimusCalculatron.howWillTheFishingBe(myForecastObj.get(position), mySolunarObj));
+        OptimusCalculatron.howWillTheFishingBe(myForecastObj.get(position), mySolunarObj));
 
-            remoteView.setTextViewText(R.id.widgetDay, myForecastObj.get(position).getName());
-            remoteView.setTextViewText(R.id.widgetWindDir, myForecastObj.get(position).getWindDirection());
-            remoteView.setTextViewText(R.id.widgetWindSpeed, myForecastObj.get(position).getWindSpeed());
-            String temp_withUnits = myForecastObj.get(position).getTemperature() + " " + myForecastObj.get(position).getTemperatureUnit();
-            remoteView.setTextViewText(R.id.widgetTemperature, temp_withUnits);
+        remoteView.setTextViewText(R.id.widgetDay, myForecastObj.get(position).getName());
+        remoteView.setTextViewText(R.id.widgetWindDir, myForecastObj.get(position).getWindDirection());
+        remoteView.setTextViewText(R.id.widgetWindSpeed, myForecastObj.get(position).getWindSpeed());
+        String temp_withUnits = myForecastObj.get(position).getTemperature() + " " + myForecastObj.get(position).getTemperatureUnit();
+        remoteView.setTextViewText(R.id.widgetTemperature, temp_withUnits);
 
-            remoteView.setTextViewText(android.R.id.text1, myForecastObj.get(position).getName());
-            remoteView.setTextColor(android.R.id.text1, Color.BLACK);
+        remoteView.setTextViewText(android.R.id.text1, myForecastObj.get(position).getName());
+        remoteView.setTextColor(android.R.id.text1, Color.BLACK);
 
-            //adds information unique to the view item at the position into a bundle, which is put in the intent for the list item
-            // ...defining the unique action
-            final Intent fillInIntent = new Intent();
-            fillInIntent.setAction(FishingWidgetProvider.ACTION_TOAST);
-            final Bundle theBundle = new Bundle();
-            theBundle.putParcelable(FishingWidgetProvider.THE_FORECAST_PERIOD_DETAILS, myForecastObj.get(position));
-            fillInIntent.putExtras(theBundle);
-            remoteView.setOnClickFillInIntent(android.R.id.text1, fillInIntent);
-//        }
+        //adds information unique to the view item at the position into a bundle, which is put in the intent for the list item
+        // ...defining the unique action
+        final Intent fillInIntent = new Intent();
+        fillInIntent.setAction(FishingWidgetProvider.ACTION_TOAST);
+        final Bundle theBundle = new Bundle();
+        theBundle.putParcelable(FishingWidgetProvider.THE_FORECAST_PERIOD_DETAILS, myForecastObj.get(position));
+        fillInIntent.putExtras(theBundle);
+        remoteView.setOnClickFillInIntent(android.R.id.text1, fillInIntent);
+
         return remoteView;
     }
 
     @Override
     public void onCreate() {
-        if(FishingWidgetProvider.mMyForecastPeriod == null)
+        if(FishingWidgetProvider.mMyForecastPeriod == null || myForecastObj == null)
             initData();
     }
 
     @Override
     public void onDataSetChanged() {
-        if(FishingWidgetProvider.mMyForecastPeriod == null)
+        if(FishingWidgetProvider.mMyForecastPeriod == null || myForecastObj == null)
             initData();
     }
 
@@ -123,9 +117,10 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
         Log.d("fart", "theForecastD: " + theForecastD);
         Log.d("fart", "theSolunarD: " + theSolunarD);
 
-        ArrayList<ForecastPeriod> myForecastObj = parseLocalWeatherForecastJSON(theForecastD);
-        SolunarData mySolunarObj = parseSolunarApiResponseJSON(theSolunarD);
+        myForecastObj = parseLocalWeatherForecastJSON(theForecastD);
+        mySolunarObj = parseSolunarApiResponseJSON(theSolunarD);
     }
+
     private ArrayList<ForecastPeriod> parseLocalWeatherForecastJSON(String forecastApiData){
         if (forecastApiData != null && !forecastApiData.isEmpty()) {
             try {
@@ -213,7 +208,6 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
         }
         return null;
     }
-
 
     @Override
     public int getViewTypeCount() {

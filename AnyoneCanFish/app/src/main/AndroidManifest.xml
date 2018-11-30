@@ -16,8 +16,8 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
         android:icon="@drawable/fish_circle_002"
+        android:label="@string/app_name"
         android:roundIcon="@drawable/fish_circle_002"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -49,6 +49,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -70,8 +71,8 @@
 
         <activity
             android:name=".GameFishActivity"
-            android:label="@string/title_activity_game_fish"
             android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_game_fish"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -120,6 +121,15 @@
             android:name=".widget.FishingWidgetRVService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
+        <activity
+            android:name=".WhatYouNeed_Activity"
+            android:label="@string/title_activity_what_you_need_"
+            android:parentActivityName=".FishingBasicsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.homebrewforlife.sharkydart.anyonecanfish.FishingBasicsActivity" />
+        </activity>
     </application>
 
 </manifest>
