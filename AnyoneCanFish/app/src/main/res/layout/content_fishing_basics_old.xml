@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,26 +13,22 @@
         android:orientation="vertical"
         android:weightSum="4"
         >
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <ImageView
+            android:layout_weight="1"
+            >
+            <ImageButton
                 android:id="@+id/btnWhatYouNeed"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/basics_whatyouneed"
-                android:src="@drawable/what_need_first_image"
-                android:scaleType="centerCrop" />
-
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/basics_whatyouneed"/>
             <View
                 android:id="@drawable/scrim"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/scrim" />
-
+                android:background="@drawable/scrim"/>
             <TextView
                 android:id="@+id/tvWhatYouNeed"
                 android:layout_width="match_parent"
@@ -51,12 +46,11 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             >
-            <ImageView
+            <ImageButton
                 android:id="@+id/btnHowToFish"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/how_to_fish"
                 android:contentDescription="@string/basics_howtofish"/>
             <View
                 android:id="@drawable/scrim"
@@ -80,12 +74,11 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             >
-            <ImageView
+            <ImageButton
                 android:id="@+id/btnRulesResources"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/guidlines"
                 android:contentDescription="@string/basics_rulesresources"/>
             <View
                 android:id="@drawable/scrim"
@@ -109,12 +102,11 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             >
-            <ImageView
+            <ImageButton
                 android:id="@+id/btnMaintenanceTips"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/bobber"
                 android:contentDescription="@string/basics_maintenance"/>
             <View
                 android:id="@drawable/scrim"
