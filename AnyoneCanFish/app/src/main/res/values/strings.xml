@@ -29,8 +29,12 @@
 
 
     <!--content description-->
+    <string name="content_outlook">Fishing Outlook</string>
     <string name="content_fish_image">Image of a fish</string>
     <string name="content_lure_image">Image of a type of lure</string>
+    <string name="content_log_event_icon">Icon of a leaping fish</string>
+    <string name="content_forecast_icon">Representation of Forecast</string>
+
     <string name="title_activity_fishing_basics">The Basics of Fishing</string>
     <string name="title_activity_game_fish">Game Fish of North America</string>
     <string name="title_activity_fishing_trips">Fishing Trips</string>

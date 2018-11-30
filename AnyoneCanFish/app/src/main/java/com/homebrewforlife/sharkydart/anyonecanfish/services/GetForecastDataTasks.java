@@ -116,7 +116,7 @@ public class GetForecastDataTasks {
                     theForecast.add(tPeriod);
                 }
                 //save forecastURL to sharedpreferences
-                //saveRawForecastDataStringToSharedPrefs(theContext, forecastApiData);
+                saveRawForecastDataStringToSharedPrefs(theContext, forecastApiData);
 
                 // - send the message back to the receiver, so it populates views using the forecast data
                 sendForecastDataBack(theForecast, theContext);
