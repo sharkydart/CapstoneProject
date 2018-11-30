@@ -40,18 +40,35 @@
             app:cardCornerRadius="0dp"
             app:cardPreventCornerOverlap="true"
             >
-
-            <TextView
-                android:id="@+id/tvFishingBasics"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|start"
-                android:paddingStart="?dialogPreferredPadding"
-                android:paddingEnd="?dialogPreferredPadding"
-                android:textColor="@color/paper_700"
-                android:textSize="30sp"
-                android:text="@string/main_btn_fishing_basics"
-                tools:text="Fishing Basics" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/btnFishingBasics"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/title_activity_fishing_basics"
+                    android:scaleType="centerCrop" />
+
+                <View
+                    android:id="@drawable/scrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/scrim" />
+
+                <TextView
+                    android:id="@+id/tvFishingBasics"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="?dialogPreferredPadding"
+                    android:paddingEnd="?dialogPreferredPadding"
+                    android:textColor="@color/paper_700"
+                    android:textSize="26sp"
+                    android:text="@string/main_btn_fishing_basics"
+                    tools:text="Fishing Basics" />
+            </FrameLayout>
         </android.support.design.card.MaterialCardView>
 
         <android.support.design.card.MaterialCardView
@@ -65,18 +82,37 @@
             app:cardCornerRadius="0dp"
             app:cardPreventCornerOverlap="true"
             >
-
-            <TextView
-                android:id="@+id/tvGameFish"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|start"
-                android:paddingStart="?dialogPreferredPadding"
-                android:paddingEnd="?dialogPreferredPadding"
-                android:textColor="@color/paper_700"
-                android:textSize="30sp"
-                android:text="@string/main_btn_game_fish"
-                tools:text="Game Fish" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/btnGameFish"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/title_activity_game_fish"
+                    android:src="@drawable/game_fish"
+                    android:scaleType="centerCrop" />
+
+                <View
+                    android:id="@drawable/scrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/scrim" />
+
+                <TextView
+                    android:id="@+id/tvGameFish"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="?dialogPreferredPadding"
+                    android:paddingEnd="?dialogPreferredPadding"
+                    android:textColor="@color/paper_300"
+                    android:textSize="26sp"
+                    android:text="@string/main_btn_game_fish"
+                    tools:text="Game Fish of North America" />
+            </FrameLayout>
+
         </android.support.design.card.MaterialCardView>
 
         <android.support.design.card.MaterialCardView
@@ -98,7 +134,7 @@
                 android:paddingStart="?dialogPreferredPadding"
                 android:paddingEnd="?dialogPreferredPadding"
                 android:textColor="@color/paper_700"
-                android:textSize="30sp"
+                android:textSize="26sp"
                 android:text="@string/main_btn_mytrips"
                 tools:text="Fishing Trips" />
         </android.support.design.card.MaterialCardView>
@@ -113,18 +149,36 @@
             app:cardElevation="2dp"
             app:cardCornerRadius="0dp"
             app:cardPreventCornerOverlap="true">
-
-            <TextView
-                android:id="@+id/tvTackleBoxes"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|start"
-                android:paddingStart="?dialogPreferredPadding"
-                android:paddingEnd="?dialogPreferredPadding"
-                android:textColor="@color/paper_700"
-                android:textSize="30sp"
-                android:text="@string/main_btn_mytackle"
-                tools:text="Tackle" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/btnTackleBoxes"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/title_activity_tackle_boxes"
+                    android:src="@drawable/what_need_first_image"
+                    android:scaleType="centerCrop" />
+
+                <View
+                    android:id="@drawable/scrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/scrim" />
+
+                <TextView
+                    android:id="@+id/tvTackleBoxes"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="?dialogPreferredPadding"
+                    android:paddingEnd="?dialogPreferredPadding"
+                    android:textColor="@color/paper_300"
+                    android:textSize="26sp"
+                    android:text="@string/title_activity_tackle_boxes"
+                    tools:text="My Tackle" />
+            </FrameLayout>
         </android.support.design.card.MaterialCardView>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

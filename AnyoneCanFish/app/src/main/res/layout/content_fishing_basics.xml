@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/basics_whatyouneed"
-                android:src="@drawable/what_need_first_image"
+                android:src="@drawable/"
                 android:scaleType="centerCrop" />
 
             <View
@@ -73,7 +73,7 @@
                 android:fontFamily="@font/adamina"
                 android:textColor="@color/paper_300"
                 android:textSize="24sp"
-                tools:text="What You Need" />
+                tools:text="How To Fish" />
         </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"
