@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompatSideChannelService;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
@@ -61,36 +63,61 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews remoteView = new RemoteViews(theContext.getPackageName(), R.layout.fishing_widget_forecast_detail);
+        RemoteViews remoteView;
+        if(FishingWidgetProvider.mMyForecastPeriod != null) {
+            remoteView = new RemoteViews(theContext.getPackageName(), android.R.layout.simple_list_item_1);
+            Log.d("fart", "ForecastPeriod " + myForecastObj.get(position).getName() + "created =>\n" +
+                myForecastObj.get(position).getQuickDescription());
 
-        AppWidgetManager aWM = AppWidgetManager.getInstance(theContext);
-        int[] appWidgetIds = aWM.getAppWidgetIds(new ComponentName(theContext, FishingWidgetProvider.class));
+            String tempFormatted = myForecastObj.get(position).getName() + " =>   " + myForecastObj.get(position).getTemperature() + " " + myForecastObj.get(position).getTemperatureUnit();
+            remoteView.setTextViewText(android.R.id.text1, tempFormatted);
+            remoteView.setTextColor(android.R.id.text1, theContext.getColor(R.color.ink_a800));
+            final Intent thisIntent = new Intent();
+            thisIntent.setAction(FishingWidgetProvider.ACTION_GOBACK);
+            remoteView.setOnClickFillInIntent(android.R.id.text1, thisIntent);
+        }
+        else {
+            remoteView = new RemoteViews(theContext.getPackageName(), android.R.layout.simple_list_item_1);
 
+            AppWidgetManager aWM = AppWidgetManager.getInstance(theContext);
+            int[] appWidgetIds = aWM.getAppWidgetIds(new ComponentName(theContext, FishingWidgetProvider.class));
 
-//            if(goodChancesToday(position) == 1)
-//                remoteView.setImageViewResource(R.id.widgetOutlookImg, );
+/*
+            Double crystalBallTarget = 30.0;
+            Double threshold = 3.0;
+            Double cutoff = 10.0;
+            Double soothsaying = OptimusCalculatron.howWillTheFishingBe(myForecastObj.get(position), mySolunarObj);
+            Log.d("fart", "firing up OptimusCalculatron: " + soothsaying);
+            Drawable imgEstimate;
+            if(Math.abs(crystalBallTarget - soothsaying) <= threshold) {
+                imgEstimate = theContext.getDrawable(R.drawable.outlook_iffy);
+            }
+            else if(soothsaying > (crystalBallTarget + threshold)){
+                imgEstimate = theContext.getDrawable(R.drawable.outlook_good);
+            }
+            else if(soothsaying < (crystalBallTarget - cutoff)){
+                imgEstimate = theContext.getDrawable(R.drawable.outlook_bad);
+            }
+*/
 
-        Log.d("fart", "firing up OptimusCalculatron: " +
-        OptimusCalculatron.howWillTheFishingBe(myForecastObj.get(position), mySolunarObj));
+//            remoteView.setTextViewText(R.id.widgetDay, myForecastObj.get(position).getName());
+//            remoteView.setTextViewText(R.id.widgetWindDir, myForecastObj.get(position).getWindDirection());
+//            remoteView.setTextViewText(R.id.widgetWindSpeed, myForecastObj.get(position).getWindSpeed());
+            String temp_withUnits = myForecastObj.get(position).getTemperature() + " " + myForecastObj.get(position).getTemperatureUnit();
+//            remoteView.setTextViewText(R.id.widgetTemperature, temp_withUnits);
+            String tempUnitsToday = temp_withUnits + " => " + myForecastObj.get(position).getName();
+            remoteView.setTextViewText(android.R.id.text1, tempUnitsToday);
+            remoteView.setTextColor(android.R.id.text1, Color.BLACK);
 
-        remoteView.setTextViewText(R.id.widgetDay, myForecastObj.get(position).getName());
-        remoteView.setTextViewText(R.id.widgetWindDir, myForecastObj.get(position).getWindDirection());
-        remoteView.setTextViewText(R.id.widgetWindSpeed, myForecastObj.get(position).getWindSpeed());
-        String temp_withUnits = myForecastObj.get(position).getTemperature() + " " + myForecastObj.get(position).getTemperatureUnit();
-        remoteView.setTextViewText(R.id.widgetTemperature, temp_withUnits);
-
-        remoteView.setTextViewText(android.R.id.text1, myForecastObj.get(position).getName());
-        remoteView.setTextColor(android.R.id.text1, Color.BLACK);
-
-        //adds information unique to the view item at the position into a bundle, which is put in the intent for the list item
-        // ...defining the unique action
-        final Intent fillInIntent = new Intent();
-        fillInIntent.setAction(FishingWidgetProvider.ACTION_TOAST);
-        final Bundle theBundle = new Bundle();
-        theBundle.putParcelable(FishingWidgetProvider.THE_FORECAST_PERIOD_DETAILS, myForecastObj.get(position));
-        fillInIntent.putExtras(theBundle);
-        remoteView.setOnClickFillInIntent(android.R.id.text1, fillInIntent);
-
+            //adds information unique to the view item at the position into a bundle, which is put in the intent for the list item
+            // ...defining the unique action
+            final Intent fillInIntent = new Intent();
+            fillInIntent.setAction(FishingWidgetProvider.ACTION_TOAST);
+            final Bundle theBundle = new Bundle();
+            theBundle.putParcelable(FishingWidgetProvider.THE_FORECAST_PERIOD_DETAILS, myForecastObj.get(position));
+            fillInIntent.putExtras(theBundle);
+            remoteView.setOnClickFillInIntent(R.id.LogFishEvent, fillInIntent);
+        }
         return remoteView;
     }
 
@@ -107,9 +134,6 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
     }
 
     private void initData(){
-        if(myForecastObj != null)
-            myForecastObj.clear();
-
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(theContext);
         String theForecastD = sharedPref.getString(MainActivity.RAW_FORECAST_DATA_SHAREDPREFS_CACHE, "A widget doesn't have a forecast.");
         String theSolunarD = sharedPref.getString(MainActivity.RAW_SOLUNAR_DATA_SHAREDPREFS_CACHE, "A widget doesn't have a sun or a moon.");

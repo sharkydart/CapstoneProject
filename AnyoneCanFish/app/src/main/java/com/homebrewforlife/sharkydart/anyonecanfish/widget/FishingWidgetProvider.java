@@ -23,7 +23,6 @@ public class FishingWidgetProvider extends AppWidgetProvider {
     public static final String ACTION_TOAST = "com.homebrewforlife.sharkydart.anyonecanfish.ACTION_TOAST";
     public static final String ACTION_GOBACK = "com.homebrewforlife.sharkydart.anyonecanfish.ACTION_GOBACK";
     public static final String THE_FORECAST_PERIOD_DETAILS = "the-forecast-period-details";
-    public static String mLastAction;
 
     public static ForecastPeriod mMyForecastPeriod;
 
