@@ -291,6 +291,7 @@ public class FirestoreStuff {
             }
         });
     }
+
     public void FirestoreLoadData(){
         //firestore references
         mFS_Store = FirebaseFirestore.getInstance();

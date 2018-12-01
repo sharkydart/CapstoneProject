@@ -1,7 +1,11 @@
 package com.homebrewforlife.sharkydart.anyonecanfish.handwavyfishingmagic;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.icu.text.StringSearch;
+import android.util.Log;
 
+import com.homebrewforlife.sharkydart.anyonecanfish.R;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.ForecastPeriod;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.SolunarData;
@@ -48,8 +52,7 @@ public class OptimusCalculatron {
 
         return start;
     }
-    public static double howWillTheFishingBe(ForecastPeriod thePeriod, SolunarData earthlyBodies, Fire_GameFish fishType)
-    {
+    public static double howWillTheFishingBe(ForecastPeriod thePeriod, SolunarData earthlyBodies, Fire_GameFish fishType){
         double start = howWillTheFishingBe(thePeriod, earthlyBodies);
         //some fish are more or less active at night
         if(thePeriod.getIsDayTime()){
@@ -89,5 +92,21 @@ public class OptimusCalculatron {
         }
 
         return start;
+    }
+
+    public static int pleaseSendYourVisualGuidanceSoThatIMayGrokTheFullness(Context theContext, ForecastPeriod theForecastSnapshot, SolunarData theSolunarObj){
+        Double crystalBallTarget = 30.0;
+        Double threshold = 3.0;
+        Double cutoff = 10.0;
+        Double soothsaying = OptimusCalculatron.howWillTheFishingBe(theForecastSnapshot, theSolunarObj);
+        Log.d("fart", "firing up OptimusCalculatron: " + soothsaying);
+        int imgEstimate = R.drawable.outlook_iffy;
+        if(soothsaying > (crystalBallTarget + threshold)){
+            imgEstimate = R.drawable.outlook_good;
+        }
+        else if(soothsaying < (crystalBallTarget - cutoff)){
+            imgEstimate = R.drawable.outlook_bad;
+        }
+        return imgEstimate;
     }
 }

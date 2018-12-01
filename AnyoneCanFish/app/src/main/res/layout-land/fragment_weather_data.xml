@@ -6,6 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/paper_300"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
     tools:listitem="@layout/fragment_day" />

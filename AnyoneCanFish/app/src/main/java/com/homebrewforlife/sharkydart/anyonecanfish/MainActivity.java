@@ -42,10 +42,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.GeoPoint;
 import com.homebrewforlife.sharkydart.anyonecanfish.adapters.ForecastRvAdapter;
+import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreAdds;
 import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreStuff;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Trip;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_User;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.ForecastPeriod;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.SolunarData;
 import com.homebrewforlife.sharkydart.anyonecanfish.services.GetForecastDataService;
@@ -176,7 +178,7 @@ public class MainActivity extends AppCompatActivity{
 //        setupRecyclerView(mForecastRecyclerView);
     }
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mForecastRvAdapter = new ForecastRvAdapter(this, mForecastPeriodsArrayList);
+        mForecastRvAdapter = new ForecastRvAdapter(this, mForecastPeriodsArrayList, mSolunarDataObj);
         recyclerView.setAdapter(mForecastRvAdapter);
     }
     private void setupOnClickListenersThatDependOnFirestore(){
@@ -398,6 +400,9 @@ public class MainActivity extends AppCompatActivity{
         }
     }
     private void FirebaseUpdateUserInfo(final FirebaseUser theUser){
+        if(theUser.getDisplayName() != null && !theUser.getDisplayName().isEmpty())
+            return;
+
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName("Curious Angler")
 //                .setPhotoUri(Uri.parse(""))
@@ -412,6 +417,8 @@ public class MainActivity extends AppCompatActivity{
                             Log.d("fart", "Name: " + theUser.getDisplayName()
                                     + " Email: " + theUser.getEmail()
                                     + " UID: " + theUser.getUid());
+
+                            FirestoreAdds.addFS_user(mContext, new Fire_User(theUser), mFS_Store);
                         }
                     }
                 });
@@ -428,7 +435,6 @@ public class MainActivity extends AppCompatActivity{
         myFirestore.Firestore_Get_GameFish(mGameFishArrayList);
 
         //get specifically TackleBoxes firestore db data
-        //TODO - "trip collection grabbing error"
         mFishingTripsArray = new ArrayList<Fire_Trip>();
         myFirestore.Firestore_Get_FishingTrips(mFishingTripsArray);
 
@@ -576,6 +582,7 @@ public class MainActivity extends AppCompatActivity{
             if(GetSolunarDataTasks.ACTION_FOUND_SOLUNAR_DATA.equals(action)){
                 mSolunarDataObj = intent.getParcelableExtra(GetSolunarDataTasks.EXTRA_THE_SOLUNAR_DATA);
                 Log.d("fart", "solunar data: " + mSolunarDataObj.getQuickDescription());
+                setupRecyclerView(mForecastRecyclerView);
             }
             else{
                 Log.d("fart", "broadcast: " + action);
@@ -592,7 +599,16 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onPause() {
         super.onPause();
-//        unregisterReceiver(mLocReceiver);
+/*
+        try {
+            unregisterReceiver(mForecastReceiver);
+            unregisterReceiver(mLocReceiver);
+            unregisterReceiver(mWeatherFirstReceiver);
+            unregisterReceiver(mSolunarReceiver);
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
+*/
     }
 
     @Override

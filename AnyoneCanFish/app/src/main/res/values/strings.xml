@@ -26,6 +26,7 @@
     <string name="db_trips">Trips</string>
     <string name="db_lures">Lures</string>
     <string name="db_fish_events">FishEvents</string>
+    <string name="db_public_fish_events">PublicFishEvents</string>
 
 
     <!--content description-->
@@ -35,6 +36,7 @@
     <string name="content_log_event_icon">Icon of a leaping fish</string>
     <string name="content_forecast_icon">Representation of Forecast</string>
     <string name="content_tackle_box_image">Image of a tackle box</string>
+    <string name="calculatron_info">An estimate of whether the fishing is good or bad or iffy</string>
 
     <string name="title_activity_fishing_basics">The Basics of Fishing</string>
     <string name="title_activity_game_fish">Game Fish of North America</string>

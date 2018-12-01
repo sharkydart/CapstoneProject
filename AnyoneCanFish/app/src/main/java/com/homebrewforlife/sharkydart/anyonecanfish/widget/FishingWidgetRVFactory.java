@@ -71,7 +71,8 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
 
             String tempFormatted = myForecastObj.get(position).getName() + " =>   " + myForecastObj.get(position).getTemperature() + " " + myForecastObj.get(position).getTemperatureUnit();
             remoteView.setTextViewText(android.R.id.text1, tempFormatted);
-            remoteView.setTextColor(android.R.id.text1, theContext.getColor(R.color.ink_a800));
+
+            remoteView.setTextColor(android.R.id.text1, theContext.getResources().getColor(R.color.ink_a800));
             final Intent thisIntent = new Intent();
             thisIntent.setAction(FishingWidgetProvider.ACTION_GOBACK);
             remoteView.setOnClickFillInIntent(android.R.id.text1, thisIntent);

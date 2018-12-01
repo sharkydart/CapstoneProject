@@ -1,5 +1,7 @@
 package com.homebrewforlife.sharkydart.anyonecanfish.models;
 
+import com.google.firebase.auth.FirebaseUser;
+
 public class Fire_User {
     private Boolean mentor;
     private String name;
@@ -11,6 +13,11 @@ public class Fire_User {
         this.mentor = mentor;
         this.name = name;
         this.uid = uid;
+    }
+    public Fire_User(FirebaseUser in){
+        this.mentor = false;
+        this.name = in.getDisplayName();
+        this.uid = in.getUid();
     }
 
     public Boolean getMentor() {
