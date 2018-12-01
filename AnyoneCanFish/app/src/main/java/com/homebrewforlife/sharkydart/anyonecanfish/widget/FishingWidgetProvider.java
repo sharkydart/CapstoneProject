@@ -22,7 +22,8 @@ import com.squareup.picasso.Picasso;
 public class FishingWidgetProvider extends AppWidgetProvider {
     public static final String ACTION_TOAST = "com.homebrewforlife.sharkydart.anyonecanfish.ACTION_TOAST";
     public static final String ACTION_GOBACK = "com.homebrewforlife.sharkydart.anyonecanfish.ACTION_GOBACK";
-    public static final String THE_FORECAST_PERIOD_DETAILS = "the-forecast-period-details";
+    public static final String THE_FISHING_FORECAST = "the-fishing-forecast-guess";
+    public static final String MAKE_A_FISHING_EVENT = "com.homebrewforlife.sharkydart.anyonecanfish.widget.make-a-new-fishing-event";
 
     public static ForecastPeriod mMyForecastPeriod;
 
@@ -33,9 +34,11 @@ public class FishingWidgetProvider extends AppWidgetProvider {
         try{
             if(intent != null && intent.getAction() != null){
                 if(intent.getAction().equals(ACTION_TOAST)) {
-                    if (intent.hasExtra(THE_FORECAST_PERIOD_DETAILS) && intent.getParcelableExtra(THE_FORECAST_PERIOD_DETAILS) != null) {
-                        mMyForecastPeriod = intent.getParcelableExtra(THE_FORECAST_PERIOD_DETAILS);
-
+                    if (intent.hasExtra(THE_FISHING_FORECAST) && intent.getStringExtra(THE_FISHING_FORECAST) != null) {
+                        String theFishingForecast = intent.getStringExtra(THE_FISHING_FORECAST);
+                        Toast.makeText(theContext, "Fishing forecast: " + theFishingForecast, Toast.LENGTH_LONG).show();
+                    }
+/*
                         AppWidgetManager aWM = AppWidgetManager.getInstance(theContext);
                         int[] appWidgetIds = aWM.getAppWidgetIds(new ComponentName(theContext, FishingWidgetProvider.class));
                         RemoteViews remoteView = new RemoteViews(theContext.getPackageName(), R.layout.fishing_widget_forecast_detail);
@@ -64,6 +67,7 @@ public class FishingWidgetProvider extends AppWidgetProvider {
                     }
                     remoteView.setImageViewResource(R.id.widget_img_icon, R.drawable.fish_leaping_icon_001);
                     aWM.updateAppWidget(appWidgetIds, remoteView);
+*/
                 }
             }
         }catch(NullPointerException e){
@@ -81,19 +85,23 @@ public class FishingWidgetProvider extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.fishing_widget_provider_layout);
 
             Intent raIntent = new Intent(context, FishingWidgetRVService.class);    //the service pushes it off to the factory, which handles the "setremoteadapter" call
-            raIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);    //don't know why
-            raIntent.setData(Uri.parse(raIntent.toUri(Intent.URI_INTENT_SCHEME)));  //don't know why
+            raIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            raIntent.setData(Uri.parse(raIntent.toUri(Intent.URI_INTENT_SCHEME)));
             views.setRemoteAdapter(R.id.widget_list, raIntent);
 
-            //set up the click for the pie image to open the app
+            //set up the click for the logo image to open the app
             final Intent appIntent = new Intent(context, MainActivity.class);
             PendingIntent openMainPendingIntent = PendingIntent.getActivity(context, 0, appIntent, 0);
             views.setOnClickPendingIntent(R.id.widget_img_icon, openMainPendingIntent);
 
-            //set up the click for the fish image to log a fish
+            //set up the click for the logo image to open the app
+            final Intent fishEventIntent = new Intent(context, MainActivity.class);
+            PendingIntent openAddFishEventPendingIntent = PendingIntent.getActivity(context, 0, fishEventIntent, 0);
+            views.setOnClickPendingIntent(R.id.imgLogFishEvent, openAddFishEventPendingIntent);
+
             final Intent onFishClickIntent = new Intent(context, FishingWidgetProvider.class);
             onFishClickIntent.setData(Uri.parse(onFishClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
-            //fishClickIntent.setAction()
+//            onFishClickIntent.setAction(MAKE_A_FISHING_EVENT);
 
             final PendingIntent onClickPendingIntent = PendingIntent.getBroadcast(context, 0, onFishClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.widget_list, onClickPendingIntent);

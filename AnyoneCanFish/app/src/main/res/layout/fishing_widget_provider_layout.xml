@@ -43,7 +43,7 @@
             android:layout_weight="3">
         </ListView>
         <ImageButton
-            android:id="@+id/LogFishEvent"
+            android:id="@+id/imgLogFishEvent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="top"

@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.homebrewforlife.sharkydart.anyonecanfish.R;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -40,6 +42,14 @@ public class TackleBoxesRVAdapter extends RecyclerView.Adapter<TackleBoxesRVAdap
         holder.mName.setText(mTackleBoxArrayList.get(position).getName());
         holder.mDescription.setText(mTackleBoxArrayList.get(position).getDesc());
 
+        if(mTackleBoxArrayList.get(position).getImg_url() != null)
+            Picasso.get().load(mTackleBoxArrayList.get(position).getImg_url())
+                    .into(holder.mTackleBoxPic);
+        else
+            Picasso.get().load(R.drawable.t_b_open_smallbrown)
+                    .into(holder.mTackleBoxPic);
+
+
         holder.itemView.setTag(mTackleBoxArrayList.get(position));
         holder.itemView.setOnClickListener(mOnClickListener);
     }
@@ -53,12 +63,14 @@ public class TackleBoxesRVAdapter extends RecyclerView.Adapter<TackleBoxesRVAdap
         TextView mDescription;
         TextView mName;
         TextView mLureCount;
+        ImageView mTackleBoxPic;
 
         ViewHolder(View view) {
             super(view);
             mDescription = view.findViewById(R.id.tvDescription);
             mName = view.findViewById(R.id.tvName);
             mLureCount = view.findViewById(R.id.tvLureCount);
+            mTackleBoxPic = view.findViewById(R.id.imgTackleBoxPic);
         }
     }
 }

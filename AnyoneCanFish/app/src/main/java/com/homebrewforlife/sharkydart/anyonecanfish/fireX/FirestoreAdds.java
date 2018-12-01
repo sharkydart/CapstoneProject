@@ -30,6 +30,7 @@ public class FirestoreAdds {
                                             null,
                                             "My First tacklebox!",
                                             "My Tackle",
+                                            "",
                                             null
                                     ));
                         }

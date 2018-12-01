@@ -17,7 +17,7 @@ import android.widget.RemoteViewsService;
 
 import com.homebrewforlife.sharkydart.anyonecanfish.MainActivity;
 import com.homebrewforlife.sharkydart.anyonecanfish.R;
-import com.homebrewforlife.sharkydart.anyonecanfish.handwavyfishingmagic.OptimusCalculatron;
+import static com.homebrewforlife.sharkydart.anyonecanfish.handwavyfishingmagic.OptimusCalculatron.*;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.ForecastPeriod;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.SolunarData;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.SolunarPhenomena;
@@ -83,41 +83,31 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
             AppWidgetManager aWM = AppWidgetManager.getInstance(theContext);
             int[] appWidgetIds = aWM.getAppWidgetIds(new ComponentName(theContext, FishingWidgetProvider.class));
 
-/*
-            Double crystalBallTarget = 30.0;
-            Double threshold = 3.0;
-            Double cutoff = 10.0;
-            Double soothsaying = OptimusCalculatron.howWillTheFishingBe(myForecastObj.get(position), mySolunarObj);
-            Log.d("fart", "firing up OptimusCalculatron: " + soothsaying);
-            Drawable imgEstimate;
-            if(Math.abs(crystalBallTarget - soothsaying) <= threshold) {
-                imgEstimate = theContext.getDrawable(R.drawable.outlook_iffy);
-            }
-            else if(soothsaying > (crystalBallTarget + threshold)){
-                imgEstimate = theContext.getDrawable(R.drawable.outlook_good);
-            }
-            else if(soothsaying < (crystalBallTarget - cutoff)){
-                imgEstimate = theContext.getDrawable(R.drawable.outlook_bad);
-            }
-*/
-
 //            remoteView.setTextViewText(R.id.widgetDay, myForecastObj.get(position).getName());
 //            remoteView.setTextViewText(R.id.widgetWindDir, myForecastObj.get(position).getWindDirection());
 //            remoteView.setTextViewText(R.id.widgetWindSpeed, myForecastObj.get(position).getWindSpeed());
-            String temp_withUnits = myForecastObj.get(position).getTemperature() + " " + myForecastObj.get(position).getTemperatureUnit();
-//            remoteView.setTextViewText(R.id.widgetTemperature, temp_withUnits);
-            String tempUnitsToday = temp_withUnits + " => " + myForecastObj.get(position).getName();
+            String temp_withUnits = Math.round(myForecastObj.get(position).getTemperature()) + " " + myForecastObj.get(position).getTemperatureUnit();
+            String tempUnitsToday = myForecastObj.get(position).getName() + ":\n"
+                    + "High: " + temp_withUnits + "\n"
+                    + "Wind: " + myForecastObj.get(position).getWindSpeed() + "\n"
+                    + "From: " + myForecastObj.get(position).getWindDirection();
             remoteView.setTextViewText(android.R.id.text1, tempUnitsToday);
-            remoteView.setTextColor(android.R.id.text1, Color.BLACK);
+            remoteView.setViewPadding(android.R.id.text1, 16, 16, 16,16);
+            remoteView.setTextColor(android.R.id.text1, theContext.getResources().getColor(R.color.ink_a800));
 
             //adds information unique to the view item at the position into a bundle, which is put in the intent for the list item
             // ...defining the unique action
             final Intent fillInIntent = new Intent();
             fillInIntent.setAction(FishingWidgetProvider.ACTION_TOAST);
+
             final Bundle theBundle = new Bundle();
-            theBundle.putParcelable(FishingWidgetProvider.THE_FORECAST_PERIOD_DETAILS, myForecastObj.get(position));
+            String wordsOfGuidance = pleaseSendWordsOfGuidance(theContext, myForecastObj.get(position), mySolunarObj);
+            theBundle.putString(FishingWidgetProvider.THE_FISHING_FORECAST, wordsOfGuidance); //myForecastObj.get(position));
+
             fillInIntent.putExtras(theBundle);
-            remoteView.setOnClickFillInIntent(R.id.LogFishEvent, fillInIntent);
+            remoteView.setOnClickFillInIntent(android.R.id.text1, fillInIntent);
+
+
         }
         return remoteView;
     }

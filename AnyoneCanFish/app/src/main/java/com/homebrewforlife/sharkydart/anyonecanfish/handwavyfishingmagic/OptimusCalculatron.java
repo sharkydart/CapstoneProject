@@ -43,13 +43,13 @@ public class OptimusCalculatron {
         if(thePeriod.getWindDirection().contains("E"))
             start = start * 0.80;
 
-        if(earthlyBodies.getFracillum() != null && !earthlyBodies.getFracillum().isEmpty())
-        {
-            Double thePercentPhase = Double.valueOf(earthlyBodies.getFracillum().replace("%","")) /100;
-            Double changedOdds = (thePercentPhase - 0.5)*20;
-            start = start + changedOdds;
+        if(earthlyBodies != null) {
+            if (earthlyBodies.getFracillum() != null && !earthlyBodies.getFracillum().isEmpty()) {
+                Double thePercentPhase = Double.valueOf(earthlyBodies.getFracillum().replace("%", "")) / 100;
+                Double changedOdds = (thePercentPhase - 0.5) * 20;
+                start = start + changedOdds;
+            }
         }
-
         return start;
     }
     public static double howWillTheFishingBe(ForecastPeriod thePeriod, SolunarData earthlyBodies, Fire_GameFish fishType){
@@ -106,6 +106,22 @@ public class OptimusCalculatron {
         }
         else if(soothsaying < (crystalBallTarget - cutoff)){
             imgEstimate = R.drawable.outlook_bad;
+        }
+        return imgEstimate;
+    }
+
+    public static String pleaseSendWordsOfGuidance(Context theContext, ForecastPeriod theForecastSnapshot, SolunarData theSolunarObj){
+        Double crystalBallTarget = 30.0;
+        Double threshold = 3.0;
+        Double cutoff = 10.0;
+        Double soothsaying = OptimusCalculatron.howWillTheFishingBe(theForecastSnapshot, theSolunarObj);
+        Log.d("fart", "firing up OptimusCalculatron: " + soothsaying);
+        String imgEstimate = "IFFY CHANCES";
+        if(soothsaying > (crystalBallTarget + threshold)){
+            imgEstimate = "GOOD CHANCES";
+        }
+        else if(soothsaying < (crystalBallTarget - cutoff)){
+            imgEstimate = "POOR CHANCES";
         }
         return imgEstimate;
     }
