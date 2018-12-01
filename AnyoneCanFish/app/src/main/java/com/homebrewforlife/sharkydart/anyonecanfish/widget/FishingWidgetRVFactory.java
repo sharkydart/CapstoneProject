@@ -64,51 +64,33 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews remoteView;
-        if(FishingWidgetProvider.mMyForecastPeriod != null) {
-            remoteView = new RemoteViews(theContext.getPackageName(), android.R.layout.simple_list_item_1);
-            Log.d("fart", "ForecastPeriod " + myForecastObj.get(position).getName() + "created =>\n" +
-                myForecastObj.get(position).getQuickDescription());
 
-            String tempFormatted = myForecastObj.get(position).getName() + " =>   " + myForecastObj.get(position).getTemperature() + " " + myForecastObj.get(position).getTemperatureUnit();
-            remoteView.setTextViewText(android.R.id.text1, tempFormatted);
+        remoteView = new RemoteViews(theContext.getPackageName(), android.R.layout.simple_list_item_1);
 
-            remoteView.setTextColor(android.R.id.text1, theContext.getResources().getColor(R.color.ink_a800));
-            final Intent thisIntent = new Intent();
-            thisIntent.setAction(FishingWidgetProvider.ACTION_GOBACK);
-            remoteView.setOnClickFillInIntent(android.R.id.text1, thisIntent);
-        }
-        else {
-            remoteView = new RemoteViews(theContext.getPackageName(), android.R.layout.simple_list_item_1);
+        AppWidgetManager aWM = AppWidgetManager.getInstance(theContext);
+        int[] appWidgetIds = aWM.getAppWidgetIds(new ComponentName(theContext, FishingWidgetProvider.class));
 
-            AppWidgetManager aWM = AppWidgetManager.getInstance(theContext);
-            int[] appWidgetIds = aWM.getAppWidgetIds(new ComponentName(theContext, FishingWidgetProvider.class));
+        String temp_withUnits = Math.round(myForecastObj.get(position).getTemperature()) + " " + myForecastObj.get(position).getTemperatureUnit();
+        String tempUnitsToday = myForecastObj.get(position).getName() + ":\n"
+                + "High: " + temp_withUnits + "\n"
+                + "Wind: " + myForecastObj.get(position).getWindSpeed() + "\n"
+                + "From: " + myForecastObj.get(position).getWindDirection();
+        remoteView.setTextViewText(android.R.id.text1, tempUnitsToday);
+        remoteView.setViewPadding(android.R.id.text1, 16, 16, 16,16);
+        remoteView.setTextColor(android.R.id.text1, theContext.getResources().getColor(R.color.ink_a800));
 
-//            remoteView.setTextViewText(R.id.widgetDay, myForecastObj.get(position).getName());
-//            remoteView.setTextViewText(R.id.widgetWindDir, myForecastObj.get(position).getWindDirection());
-//            remoteView.setTextViewText(R.id.widgetWindSpeed, myForecastObj.get(position).getWindSpeed());
-            String temp_withUnits = Math.round(myForecastObj.get(position).getTemperature()) + " " + myForecastObj.get(position).getTemperatureUnit();
-            String tempUnitsToday = myForecastObj.get(position).getName() + ":\n"
-                    + "High: " + temp_withUnits + "\n"
-                    + "Wind: " + myForecastObj.get(position).getWindSpeed() + "\n"
-                    + "From: " + myForecastObj.get(position).getWindDirection();
-            remoteView.setTextViewText(android.R.id.text1, tempUnitsToday);
-            remoteView.setViewPadding(android.R.id.text1, 16, 16, 16,16);
-            remoteView.setTextColor(android.R.id.text1, theContext.getResources().getColor(R.color.ink_a800));
+        //adds information unique to the view item at the position into a bundle, which is put in the intent for the list item
+        // ...defining the unique action
+        final Intent fillInIntent = new Intent();
+        fillInIntent.setAction(FishingWidgetProvider.ACTION_TOAST);
 
-            //adds information unique to the view item at the position into a bundle, which is put in the intent for the list item
-            // ...defining the unique action
-            final Intent fillInIntent = new Intent();
-            fillInIntent.setAction(FishingWidgetProvider.ACTION_TOAST);
+        final Bundle theBundle = new Bundle();
+        String wordsOfGuidance = pleaseSendWordsOfGuidance(theContext, myForecastObj.get(position), mySolunarObj);
+        theBundle.putString(FishingWidgetProvider.THE_FISHING_FORECAST, wordsOfGuidance); //myForecastObj.get(position));
 
-            final Bundle theBundle = new Bundle();
-            String wordsOfGuidance = pleaseSendWordsOfGuidance(theContext, myForecastObj.get(position), mySolunarObj);
-            theBundle.putString(FishingWidgetProvider.THE_FISHING_FORECAST, wordsOfGuidance); //myForecastObj.get(position));
+        fillInIntent.putExtras(theBundle);
+        remoteView.setOnClickFillInIntent(android.R.id.text1, fillInIntent);
 
-            fillInIntent.putExtras(theBundle);
-            remoteView.setOnClickFillInIntent(android.R.id.text1, fillInIntent);
-
-
-        }
         return remoteView;
     }
 
