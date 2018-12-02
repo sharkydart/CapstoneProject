@@ -46,6 +46,7 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -98,6 +99,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.homebrewforlife.sharkydart.anyonecanfish.MainActivity" />
         </activity>
+        <!-- <activity -->
+        <!-- android:name=".FishEventsActivity" -->
+        <!-- android:label="@string/title_activity_fish_events" -->
+        <!-- android:parentActivityName=".FishingTripsActivity" -->
+        <!-- android:theme="@style/AppTheme.NoActionBar"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.PARENT_ACTIVITY" -->
+        <!-- android:value="com.homebrewforlife.sharkydart.anyonecanfish.FishingTripsActivity" /> -->
+        <!-- </activity> -->
         <activity
             android:name=".TackleBoxesActivity"
             android:label="@string/title_activity_tackle_boxes"
@@ -107,6 +117,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.homebrewforlife.sharkydart.anyonecanfish.MainActivity" />
         </activity>
+        <!-- <activity -->
+        <!-- android:name=".LuresActivity" -->
+        <!-- android:label="@string/title_activity_lures" -->
+        <!-- android:parentActivityName=".TackleBoxesActivity" -->
+        <!-- android:theme="@style/AppTheme.NoActionBar"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.PARENT_ACTIVITY" -->
+        <!-- android:value="com.homebrewforlife.sharkydart.anyonecanfish.TackleBoxesActivity" /> -->
+        <!-- </activity> -->
 
         <receiver android:name=".widget.FishingWidgetProvider">
             <intent-filter>
@@ -123,8 +142,26 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
-            android:name=".WhatYouNeed_Activity"
-            android:label="@string/title_activity_what_you_need_"
+            android:name=".BasicEquipment_Activity"
+            android:label="@string/title_activity_basic_equipment"
+            android:parentActivityName=".FishingBasicsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.homebrewforlife.sharkydart.anyonecanfish.FishingBasicsActivity" />
+        </activity>
+        <activity
+            android:name=".HowToFish_Activity"
+            android:label="@string/title_activity_how_to_fish_"
+            android:parentActivityName=".FishingBasicsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.homebrewforlife.sharkydart.anyonecanfish.FishingBasicsActivity" />
+        </activity>
+        <activity
+            android:name=".Maintenance_Activity"
+            android:label="@string/title_activity_maintenance_"
             android:parentActivityName=".FishingBasicsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

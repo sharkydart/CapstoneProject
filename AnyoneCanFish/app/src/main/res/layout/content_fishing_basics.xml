@@ -21,7 +21,7 @@
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/btnWhatYouNeed"
+                android:id="@+id/btnBasicEquipment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/basics_whatyouneed"
@@ -35,7 +35,7 @@
                 android:background="@drawable/scrim" />
 
             <TextView
-                android:id="@+id/tvWhatYouNeed"
+                android:id="@+id/tvBasicEquipment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
@@ -45,7 +45,7 @@
                 android:textColor="@color/paper_300"
                 android:textSize="24sp"
                 android:text="@string/basics_whatyouneed"
-                tools:text="What You Need" />
+                tools:text="Basic Equipment" />
         </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"

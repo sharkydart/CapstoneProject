@@ -12,23 +12,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.homebrewforlife.sharkydart.anyonecanfish.adapters.TackleBoxesRVAdapter;
+import com.homebrewforlife.sharkydart.anyonecanfish.adapters.LuresRVAdapter;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Lure;
-import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
 
 import java.util.ArrayList;
 
-public class TackleBoxesActivity extends AppCompatActivity {
+public class LuresActivity extends AppCompatActivity {
 
-    ArrayList<Fire_TackleBox> mTackleBoxArrayList;
-    TackleBoxesRVAdapter mTackleBoxRVAdapter;
-    RecyclerView mTackleBoxRV;
-    public static final String LURES_ARRAYLIST = "lures-array-list";
+    ArrayList<Fire_Lure> mLuresArrayList;
+    LuresRVAdapter mLuresRVAdapter;
+    RecyclerView mLuresRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tackle_boxes);
+        setContentView(R.layout.activity_lures);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Show the Up button in the action bar.
@@ -38,34 +36,34 @@ public class TackleBoxesActivity extends AppCompatActivity {
         }
 
         if(savedInstanceState == null){
-            mTackleBoxArrayList = new ArrayList<>();
-        }else if(savedInstanceState.containsKey(MainActivity.TACKLE_BOXES_ARRAYLIST)){
-            mTackleBoxArrayList = savedInstanceState.getParcelableArrayList(MainActivity.TACKLE_BOXES_ARRAYLIST);
+            mLuresArrayList = new ArrayList<>();
+        }else if(savedInstanceState.containsKey(TackleBoxesActivity.LURES_ARRAYLIST)){
+            mLuresArrayList = savedInstanceState.getParcelableArrayList(TackleBoxesActivity.LURES_ARRAYLIST);
         }
 
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
         }else {
-            mTackleBoxArrayList = intent.getParcelableArrayListExtra(MainActivity.TACKLE_BOXES_ARRAYLIST);
+            mLuresArrayList = intent.getParcelableArrayListExtra(TackleBoxesActivity.LURES_ARRAYLIST);
         }
 
-        mTackleBoxRV = findViewById(R.id.rvTackleBoxes);
-        assert mTackleBoxRV != null;
-        setupRecyclerView(mTackleBoxRV);
+        mLuresRV = findViewById(R.id.rvLures);
+        assert mLuresRV != null;
+        setupRecyclerView(mLuresRV);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mTackleBoxRVAdapter = new TackleBoxesRVAdapter(this, mTackleBoxArrayList);
+        mLuresRVAdapter = new LuresRVAdapter(this, mLuresArrayList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mTackleBoxRVAdapter);
+        recyclerView.setAdapter(mLuresRVAdapter);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(MainActivity.TACKLE_BOXES_ARRAYLIST, mTackleBoxArrayList);
+        outState.putParcelableArrayList(TackleBoxesActivity.LURES_ARRAYLIST, mLuresArrayList);
     }
 
     private void closeOnError() {

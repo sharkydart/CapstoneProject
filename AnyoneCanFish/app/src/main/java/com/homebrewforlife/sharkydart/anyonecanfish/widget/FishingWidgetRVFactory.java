@@ -5,13 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompatSideChannelService;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -21,7 +17,6 @@ import static com.homebrewforlife.sharkydart.anyonecanfish.handwavyfishingmagic.
 import com.homebrewforlife.sharkydart.anyonecanfish.models.ForecastPeriod;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.SolunarData;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.SolunarPhenomena;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,11 +30,9 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
     private SolunarData mySolunarObj = new SolunarData();
 
     private Context theContext;
-    private Intent theIntent;
 
-    public FishingWidgetRVFactory(Context context, Intent intent) {
+    FishingWidgetRVFactory(Context context, Intent intent) {
         this.theContext = context;
-        this.theIntent = intent;
     }
 
     @Override

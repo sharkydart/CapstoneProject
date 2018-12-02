@@ -11,23 +11,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.homebrewforlife.sharkydart.anyonecanfish.R;
-import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Lure;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class TackleBoxesRVAdapter extends RecyclerView.Adapter<TackleBoxesRVAdapter.ViewHolder> {
-    private final ArrayList<Fire_TackleBox> mTackleBoxArrayList;
+public class LuresRVAdapter extends RecyclerView.Adapter<LuresRVAdapter.ViewHolder> {
+    private final ArrayList<Fire_Lure> mLureArrayList;
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Fire_TackleBox theBox = (Fire_TackleBox) view.getTag();
-            Log.d("fart", "clicked tacklebox: " + theBox.getUid());
+            Fire_Lure theBox = (Fire_Lure) view.getTag();
+            Log.d("fart", "clicked Lure: " + theBox.getUid());
         }
     };
 
-    public TackleBoxesRVAdapter(AppCompatActivity parent, ArrayList<Fire_TackleBox> items) {
-        mTackleBoxArrayList = items;
+    public LuresRVAdapter(AppCompatActivity parent, ArrayList<Fire_Lure> items) {
+        mLureArrayList = items;
     }
 
     @Override @NonNull
@@ -39,37 +39,32 @@ public class TackleBoxesRVAdapter extends RecyclerView.Adapter<TackleBoxesRVAdap
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        holder.mName.setText(mTackleBoxArrayList.get(position).getName());
-        holder.mDescription.setText(mTackleBoxArrayList.get(position).getDesc());
+        holder.mName.setText(mLureArrayList.get(position).getName());
+        holder.mDescription.setText(mLureArrayList.get(position).getDesc());
 
-        if(mTackleBoxArrayList.get(position).getImage_url() != null)
-            Picasso.get().load(mTackleBoxArrayList.get(position).getImage_url())
-                    .into(holder.mTackleBoxPic);
-        else
-            Picasso.get().load(R.drawable.t_b_open_smallbrown)
-                    .into(holder.mTackleBoxPic);
+        if(mLureArrayList.get(position).getImage_url() != null)
+            Picasso.get().load(mLureArrayList.get(position).getImage_url())
+                    .into(holder.mLurePic);
 
-        holder.itemView.setTag(mTackleBoxArrayList.get(position));
+        holder.itemView.setTag(mLureArrayList.get(position));
         holder.itemView.setOnClickListener(mOnClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return mTackleBoxArrayList.size();
+        return mLureArrayList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView mDescription;
         TextView mName;
-        TextView mLureCount;
-        ImageView mTackleBoxPic;
+        ImageView mLurePic;
 
         ViewHolder(View view) {
             super(view);
             mDescription = view.findViewById(R.id.tvDescription);
             mName = view.findViewById(R.id.tvName);
-            mLureCount = view.findViewById(R.id.tvLureCount);
-            mTackleBoxPic = view.findViewById(R.id.imgTackleBoxPic);
+            mLurePic = view.findViewById(R.id.imgLurePic);
         }
     }
 }

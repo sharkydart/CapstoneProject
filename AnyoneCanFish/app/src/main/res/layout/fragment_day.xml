@@ -109,7 +109,7 @@
                 android:layout_gravity="end">
                 <ImageView
                     android:id="@+id/imgGuessAtSuccess"
-                    android:layout_width="40dp"
+                    android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="end"
                     android:scaleType="fitEnd"

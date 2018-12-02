@@ -74,6 +74,13 @@ public class MainActivity extends AppCompatActivity{
     private final int RC_SWEET_PERMISSIONS = 1337;
     private Context mContext;
 
+    //keys
+    public static final String SAVE_SOLUNAR_ARRAY = "com.homebrewforlife.sharkydart.anyonecanfish.mainactivity.the-solunar-parcelble";
+    public static final String SAVE_FORECAST_PERIODS_ARRAY = "com.homebrewforlife.sharkydart.anyonecanfish.mainactivity.the-forecast-periods-array-list";
+    public static final String SAVE_GAME_FISH_ARRAY = "com.homebrewforlife.sharkydart.anyonecanfish.mainactivity.gamefish-arraylist";
+    public static final String SAVE_TRIPS_ARRAY = "com.homebrewforlife.sharkydart.anyonecanfish.mainactivity.trips-arraylist";
+    public static final String SAVE_TACKLEBOXES_ARRAY = "com.homebrewforlife.sharkydart.anyonecanfish.mainactivity.tackleboxes-arraylist";
+
     //    public static final String GPS_SHAREDPREFS_CACHE = "gps-sharedpreferences-cache";
     public static final String FORECAST_URL_SHAREDPREFS_CACHE = "last-cached-forecast-url";
     public static final String CITY_SHAREDPREFS_CACHE = "last-cached-forecast-city";
@@ -100,7 +107,6 @@ public class MainActivity extends AppCompatActivity{
     //Firestore Database Reference
     FirebaseFirestore mFS_Store;
     DocumentReference mFS_User_document_ref;
-    CollectionReference mFS_GameFish_collection_ref;
 
     //Solunar Data
     SolunarData mSolunarDataObj;
@@ -109,7 +115,7 @@ public class MainActivity extends AppCompatActivity{
     ArrayList<ForecastPeriod> mForecastPeriodsArrayList;
     ForecastRvAdapter mForecastRvAdapter;
     RecyclerView mForecastRecyclerView;
-    public static final String FORECAST_ARRAYLIST = "weather-forecast-array-list";
+    Bundle mTheIntanceState;
 
     //Arraylists to send to child activities
     ArrayList<Fire_GameFish> mGameFishArrayList;
@@ -138,13 +144,11 @@ public class MainActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.theMainToolbar);
         setSupportActionBar(toolbar);
         mContext = this;
+        mTheIntanceState = savedInstanceState;
 
         // Enable Firestore logging
         FirebaseFirestore.setLoggingEnabled(true);
         mAuth = FirebaseAuth.getInstance();
-
-        //verify location permissions and start getting location and weather data
-        verifyLocationPermissions(false);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -162,21 +166,49 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        //verify location permissions and start getting location and weather data
+        verifyLocationPermissions(false);
+
         if(savedInstanceState == null){
             mForecastPeriodsArrayList = new ArrayList<>();
-        }else if(savedInstanceState.containsKey(MainActivity.FORECAST_ARRAYLIST)){
-            mForecastPeriodsArrayList = savedInstanceState.getParcelableArrayList(MainActivity.FORECAST_ARRAYLIST);
+        }else{
+            mSolunarDataObj = savedInstanceState.getParcelable(SAVE_SOLUNAR_ARRAY);
+            mForecastPeriodsArrayList = savedInstanceState.getParcelableArrayList(SAVE_FORECAST_PERIODS_ARRAY);
+            mGameFishArrayList = savedInstanceState.getParcelableArrayList(SAVE_GAME_FISH_ARRAY);
+            mFishingTripsArray = savedInstanceState.getParcelableArrayList(SAVE_TRIPS_ARRAY);
+            mTackleBoxesArray = savedInstanceState.getParcelableArrayList(SAVE_TACKLEBOXES_ARRAY);
         }
 
         mForecastRecyclerView = findViewById(R.id.rvWeatherDays);
         assert mForecastRecyclerView != null;
         mForecastRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         SnapHelper snapHelper = new PagerSnapHelper();
-        mForecastRecyclerView.setLayoutManager(layoutManager);
+//        mForecastRecyclerView.setLayoutManager(layoutManager);
         snapHelper.attachToRecyclerView(mForecastRecyclerView);
 //        setupRecyclerView(mForecastRecyclerView);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(SAVE_FORECAST_PERIODS_ARRAY, mForecastPeriodsArrayList);
+        outState.putParcelable(SAVE_SOLUNAR_ARRAY, mSolunarDataObj);
+        outState.putParcelableArrayList(SAVE_GAME_FISH_ARRAY,mGameFishArrayList);
+        outState.putParcelableArrayList(SAVE_TRIPS_ARRAY,mFishingTripsArray);
+        outState.putParcelableArrayList(SAVE_TACKLEBOXES_ARRAY,mTackleBoxesArray);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mSolunarDataObj = savedInstanceState.getParcelable(SAVE_SOLUNAR_ARRAY);
+        mForecastPeriodsArrayList = savedInstanceState.getParcelableArrayList(SAVE_FORECAST_PERIODS_ARRAY);
+        mGameFishArrayList = savedInstanceState.getParcelableArrayList(SAVE_GAME_FISH_ARRAY);
+        mFishingTripsArray = savedInstanceState.getParcelableArrayList(SAVE_TRIPS_ARRAY);
+        mTackleBoxesArray = savedInstanceState.getParcelableArrayList(SAVE_TACKLEBOXES_ARRAY);
+    }
+
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         mForecastRvAdapter = new ForecastRvAdapter(this, mForecastPeriodsArrayList, mSolunarDataObj);
         recyclerView.setAdapter(mForecastRvAdapter);
@@ -269,7 +301,7 @@ public class MainActivity extends AppCompatActivity{
         editor.apply();
     }
     private GeoPoint getCoordsFromSharedPrefs(){
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         String lat = mSharedPreferences.getString(SHAREDPREFS_LAT, null);
         String lon = mSharedPreferences.getString(SHAREDPREFS_LON, null);
         GeoPoint coords;
@@ -286,11 +318,11 @@ public class MainActivity extends AppCompatActivity{
         editor.apply();
     }
     public String getForecastURLFromSharedPrefs(){
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         return mSharedPreferences.getString(FORECAST_URL_SHAREDPREFS_CACHE, null);
     }
     public String getForecastCITYFromSharedPrefs(){
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         return mSharedPreferences.getString(CITY_SHAREDPREFS_CACHE, null);
     }
 
@@ -379,19 +411,19 @@ public class MainActivity extends AppCompatActivity{
                 RC_SIGN_IN);
     }
 
-    private void FirebaseGetUserInfo(){
+    private void FirebaseGetUserInfo(FirebaseUser theCurUser){
         //FirebaseUser user = mAuth.getCurrentUser();
         try {
-            if(mCurUser != null) {
-                Log.d("fart", "Name: " + mCurUser.getDisplayName()
-                        + " Email: " + mCurUser.getEmail()
-                        + " UID: " + mCurUser.getUid());
-                if(mCurUser.getDisplayName() == null)
-                    FirebaseUpdateUserInfo(mCurUser);   //just to set a name, if there is none
+            if(theCurUser != null) {
+                Log.d("fart", "Name: " + theCurUser.getDisplayName()
+                        + " Email: " + theCurUser.getEmail()
+                        + " UID: " + theCurUser.getUid());
+                if(theCurUser.getDisplayName() == null)
+                    FirebaseUpdateUserInfo(theCurUser);   //just to set a name, if there is none
                 else {
                     //Firestore_PrepUserInfo
                     //sets the reference to the users' specific document
-                    mFS_User_document_ref = mFS_Store.collection(getString(R.string.db_users)).document(mCurUser.getUid());
+                    mFS_User_document_ref = mFS_Store.collection(getString(R.string.db_users)).document(theCurUser.getUid());
                 }
             }
         }
@@ -427,7 +459,7 @@ public class MainActivity extends AppCompatActivity{
         //firestore references
         mFS_Store = FirebaseFirestore.getInstance();
         //get specifically user firestore db data
-        FirebaseGetUserInfo();
+        FirebaseGetUserInfo(mCurUser);
 
         FirestoreStuff myFirestore = new FirestoreStuff(mContext,mCurUser,mFS_Store);
         //get specifically game_fish firestore db data

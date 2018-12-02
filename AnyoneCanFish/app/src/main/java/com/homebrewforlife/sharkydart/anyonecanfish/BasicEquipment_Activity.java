@@ -12,25 +12,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.homebrewforlife.sharkydart.anyonecanfish.adapters.TackleBoxesRVAdapter;
-import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Lure;
-import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
+import com.homebrewforlife.sharkydart.anyonecanfish.adapters.BasicEquipmentRVAdapter;
+import com.homebrewforlife.sharkydart.anyonecanfish.adapters.GameFishRVAdapter;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_BasicInfo;
 
 import java.util.ArrayList;
 
-public class TackleBoxesActivity extends AppCompatActivity {
+public class BasicEquipment_Activity extends AppCompatActivity {
 
-    ArrayList<Fire_TackleBox> mTackleBoxArrayList;
-    TackleBoxesRVAdapter mTackleBoxRVAdapter;
-    RecyclerView mTackleBoxRV;
-    public static final String LURES_ARRAYLIST = "lures-array-list";
+    ArrayList<Fire_BasicInfo> mBasicInfoArrayList;
+    BasicEquipmentRVAdapter mBasicInfoRVAdapter;
+    RecyclerView mBasicInfoRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tackle_boxes);
+        setContentView(R.layout.activity_basic_equipment);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -38,34 +38,33 @@ public class TackleBoxesActivity extends AppCompatActivity {
         }
 
         if(savedInstanceState == null){
-            mTackleBoxArrayList = new ArrayList<>();
-        }else if(savedInstanceState.containsKey(MainActivity.TACKLE_BOXES_ARRAYLIST)){
-            mTackleBoxArrayList = savedInstanceState.getParcelableArrayList(MainActivity.TACKLE_BOXES_ARRAYLIST);
+            mBasicInfoArrayList = new ArrayList<>();
+        }else if(savedInstanceState.containsKey(FishingBasicsActivity.BASIC_EQUIPMENT_ACTIVITY)){
+            mBasicInfoArrayList = savedInstanceState.getParcelableArrayList(FishingBasicsActivity.BASIC_EQUIPMENT_ACTIVITY);
         }
 
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
         }else {
-            mTackleBoxArrayList = intent.getParcelableArrayListExtra(MainActivity.TACKLE_BOXES_ARRAYLIST);
+            mBasicInfoArrayList = intent.getParcelableArrayListExtra(FishingBasicsActivity.BASIC_EQUIPMENT_ACTIVITY);
         }
 
-        mTackleBoxRV = findViewById(R.id.rvTackleBoxes);
-        assert mTackleBoxRV != null;
-        setupRecyclerView(mTackleBoxRV);
+        mBasicInfoRV = findViewById(R.id.rvBasicEquipment);
+        assert mBasicInfoRV != null;
+        setupRecyclerView(mBasicInfoRV);
     }
-
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mTackleBoxRVAdapter = new TackleBoxesRVAdapter(this, mTackleBoxArrayList);
+        mBasicInfoRVAdapter = new BasicEquipmentRVAdapter(this, mBasicInfoArrayList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mTackleBoxRVAdapter);
+        recyclerView.setAdapter(mBasicInfoRVAdapter);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(MainActivity.TACKLE_BOXES_ARRAYLIST, mTackleBoxArrayList);
+        outState.putParcelableArrayList(FishingBasicsActivity.BASIC_EQUIPMENT_ACTIVITY, mBasicInfoArrayList);
     }
 
     private void closeOnError() {
@@ -82,5 +81,4 @@ public class TackleBoxesActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

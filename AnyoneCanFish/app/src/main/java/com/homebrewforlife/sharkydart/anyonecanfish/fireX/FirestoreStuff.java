@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.homebrewforlife.sharkydart.anyonecanfish.R;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_BasicInfo;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_FishEvent;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_GameFish;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Lure;
@@ -239,7 +240,7 @@ public class FirestoreStuff {
                             for (QueryDocumentSnapshot tacklebox : queryDocumentSnapshots){
                                 Fire_TackleBox bork = tacklebox.toObject(Fire_TackleBox.class);
                                 bork.setUid(tacklebox.getId());
-                                Log.i("fart", bork.getQuickDescription());
+                                Log.i("fart", "TackleBox:" + bork.getQuickDescription());
                                 if(theTackleBoxes != null) {
                                     theTackleBoxes.add(bork);
                                 }
@@ -290,6 +291,33 @@ public class FirestoreStuff {
                 Log.e("fart", "lures collection grabbing error");
             }
         });
+    }
+    public void Firestore_Get_BasicInfo(final ArrayList<Fire_BasicInfo> theBasicInfo){
+        try {
+            CollectionReference basicInfo_collection_ref = mFS_Store.collection(mContext.getString(R.string.db_basic_info));
+            basicInfo_collection_ref.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (theBasicInfo != null)
+                                theBasicInfo.clear();
+                            for (QueryDocumentSnapshot someInfo : queryDocumentSnapshots) {
+                                Fire_BasicInfo bork = someInfo.toObject(Fire_BasicInfo.class);
+                                if (theBasicInfo != null) {
+                                    theBasicInfo.add(bork);
+                                }
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("fart", "basic info grabbing error");
+                }
+            });
+        }
+        catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     public void FirestoreLoadData(){
