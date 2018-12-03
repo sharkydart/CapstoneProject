@@ -35,6 +35,7 @@ import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Trip;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class FirestoreStuff {
     @NonNull
@@ -244,33 +245,45 @@ public class FirestoreStuff {
             e.printStackTrace();
         }
     }
-    public void Firestore_Get_TackleBox_Lures(String uid_tacklebox, final ArrayList<Fire_Lure> theLures){
-        CollectionReference FS_tacklebox_lures = mFS_Store
-                .collection(mContext.getString(R.string.db_users))
-                .document(mCurUser.getUid())
-                .collection(mContext.getString(R.string.db_tackle_boxes))
-                .document(uid_tacklebox)
-                .collection(mContext.getString(R.string.db_lures));
-        FS_tacklebox_lures.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(theLures != null)
-                            theLures.clear();
-                        for(QueryDocumentSnapshot lure : queryDocumentSnapshots){
-                            Fire_Lure bork = lure.toObject(Fire_Lure.class);
-                            //Log.i("fart", bork.getQuickDescription());
-                            if(theLures != null) {
-                                theLures.add(bork);
+    public void Firestore_Get_TackleBox_Lures(String uid_tacklebox, final ArrayList<Fire_Lure> theLures) {
+        Firestore_Get_TackleBox_Lures(uid_tacklebox, theLures, null);
+    }
+    public void Firestore_Get_TackleBox_Lures(String uid_tacklebox, final ArrayList<Fire_Lure> theLures, final CountDownLatch signal){
+        try {
+            CollectionReference FS_tacklebox_lures = mFS_Store
+                    .collection(mContext.getString(R.string.db_users))
+                    .document(mCurUser.getUid())
+                    .collection(mContext.getString(R.string.db_tackle_boxes))
+                    .document(uid_tacklebox)
+                    .collection(mContext.getString(R.string.db_lures));
+            FS_tacklebox_lures.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (theLures != null)
+                                theLures.clear();
+                            for (QueryDocumentSnapshot lure : queryDocumentSnapshots) {
+                                Fire_Lure bork = lure.toObject(Fire_Lure.class);
+                                Log.i("fart", bork.getQuickDescription());
+                                if (theLures != null) {
+                                    theLures.add(bork);
+                                }
                             }
+                            if(theLures != null)
+                                Log.d("fart", "the lures count = " + theLures.size());
+                            if(signal != null)
+                                signal.countDown();
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("fart", "lures collection grabbing error: " + e.getMessage());
-            }
-        });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("fart", "lures collection grabbing error: " + e.getMessage());
+                }
+            });
+        }
+        catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
     public void Firestore_Get_BasicInfo(final ArrayList<Fire_BasicInfo> theBasicInfo){
         try {

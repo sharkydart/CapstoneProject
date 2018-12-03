@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,6 +25,11 @@ import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreAdds;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Lure;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Trip;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_User;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.homebrewforlife.sharkydart.anyonecanfish.MainActivity.SHAREDPREFS_LAT;
 import static com.homebrewforlife.sharkydart.anyonecanfish.MainActivity.SHAREDPREFS_LON;
@@ -61,13 +67,18 @@ public class FishingTripsActivity extends AppCompatActivity {
                                 if(mCurUser != null){
                                     String trip_name = ((EditText)findViewById(R.id.etName)).getText().toString();
                                     String trip_desc = ((EditText)findViewById(R.id.etDescription)).getText().toString();
+
+                                    Date c = Calendar.getInstance().getTime();
+                                    SimpleDateFormat df = new SimpleDateFormat("MM/dd/YYYY", Locale.US);
+                                    String theDate = df.format(c);
+
                                     FirestoreAdds.addFS_trip(mContext, mFS_Store, new Fire_User(mCurUser),
-                                            new Fire_Trip(null,
-                                                    MainActivity.getCoordsFromSharedPrefs(mContext),
+                                            new Fire_Trip("",
+                                                    new GeoPoint(0.0,0.0),
                                                     trip_name,
                                                     trip_desc,
-                                                    null,
-                                                    null)
+                                                    Timestamp.now(),
+                                                    Timestamp.now())
                                     );
                                     Toast.makeText(mContext, "Making a trip...", Toast.LENGTH_SHORT).show();
                                 }

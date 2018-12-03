@@ -3,6 +3,7 @@ package com.homebrewforlife.sharkydart.anyonecanfish.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+
 public class Fire_Lure implements Parcelable{
     private String uid;
     private String name;

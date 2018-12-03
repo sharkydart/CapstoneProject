@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.homebrewforlife.sharkydart.anyonecanfish.AsyncTask.DataGrabListener;
+import com.homebrewforlife.sharkydart.anyonecanfish.AsyncTask.FirestoreGrabber;
 import com.homebrewforlife.sharkydart.anyonecanfish.adapters.LuresRVAdapter;
 import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreAdds;
 import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreStuff;
@@ -30,13 +32,14 @@ import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_User;
 
 import java.util.ArrayList;
 
-public class LuresActivity extends AppCompatActivity {
+public class LuresActivity extends AppCompatActivity implements DataGrabListener{
 
     ArrayList<Fire_Lure> mLuresArrayList;
     LuresRVAdapter mLuresRVAdapter;
     RecyclerView mLuresRV;
     private Context mContext;
     Fire_TackleBox mInTacklebox;
+    FirestoreGrabber fs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,7 @@ public class LuresActivity extends AppCompatActivity {
             closeOnError();
         }else {
             mInTacklebox = intent.getParcelableExtra(TackleBoxesActivity.THE_TACKLEBOX);
+            Log.d("fart", mInTacklebox.getUid() + "  " + mInTacklebox.getName());
             loadLuresFromFirebase();
         }
 
@@ -105,12 +109,17 @@ public class LuresActivity extends AppCompatActivity {
         FirebaseUser theuser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore theFS = FirebaseFirestore.getInstance();
         FirestoreStuff fss = new FirestoreStuff(mContext, theuser, theFS);
-        fss.Firestore_Get_TackleBox_Lures(mInTacklebox.getUid(), theLures);
+        FirestoreGrabber fs = new FirestoreGrabber();
+        fs.setMyTackleBox(mInTacklebox);
+        fs.setMyFirestoreStuff(fss);
+        fs.setMyArrayList(theLures);
+        fs.execute(this);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         mLuresRVAdapter = new LuresRVAdapter(this, mLuresArrayList, mInTacklebox);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mLuresRVAdapter);
     }
 
@@ -143,4 +152,12 @@ public class LuresActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onComplete(ArrayList<Fire_Lure> output) {
+        if(output != null)
+            Log.d("fart", "Lure count: " + output.size());
+        mLuresArrayList = output;
+        mLuresRVAdapter.notifyDataSetChanged();
+        setupRecyclerView(mLuresRV);
+    }
 }

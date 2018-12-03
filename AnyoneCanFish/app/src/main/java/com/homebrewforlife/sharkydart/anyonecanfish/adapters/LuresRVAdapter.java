@@ -27,7 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class LuresRVAdapter extends RecyclerView.Adapter<LuresRVAdapter.ViewHolder> {
-    private final ArrayList<Fire_Lure> mLureArrayList;
+    private ArrayList<Fire_Lure> mLureArrayList;
     private Fire_TackleBox mTackleBox;
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -82,7 +82,6 @@ public class LuresRVAdapter extends RecyclerView.Adapter<LuresRVAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        Log.d("fart", "LuresRVAdapter itemcount: " + mLureArrayList.size());
         return mLureArrayList.size();
     }
 

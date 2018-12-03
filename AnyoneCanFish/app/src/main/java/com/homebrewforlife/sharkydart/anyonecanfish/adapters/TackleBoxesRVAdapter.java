@@ -34,12 +34,13 @@ public class TackleBoxesRVAdapter extends RecyclerView.Adapter<TackleBoxesRVAdap
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Fire_TackleBox theBox = (Fire_TackleBox) view.getTag();
+            Fire_TackleBox theBox = (Fire_TackleBox)view.getTag();
 
-            Intent intent = new Intent(view.getContext(), LuresActivity.class);
+            Intent intent = new Intent(mContext, LuresActivity.class);
             intent.putExtra(TackleBoxesActivity.THE_TACKLEBOX, theBox);
+            Log.d("fart", "Clicked tacklebox: " + theBox.getUid() + " " + theBox.getDesc() + " " + theBox.getName());
 
-            view.getContext().startActivity(intent);
+            mContext.startActivity(intent);
         }
     };
 
@@ -68,7 +69,9 @@ public class TackleBoxesRVAdapter extends RecyclerView.Adapter<TackleBoxesRVAdap
                     .into(holder.mTackleBoxPic);
 
         holder.itemView.setTag(mTackleBoxArrayList.get(position));
-        holder.itemView.setOnClickListener(mOnClickListener);
+
+        //TODO - The following line is commented out because I couldn't solve an issue with loading Lures
+        //holder.itemView.setOnClickListener(mOnClickListener);
     }
 
     @Override

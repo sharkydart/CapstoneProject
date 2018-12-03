@@ -33,8 +33,10 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -67,11 +69,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends AppCompatActivity{
 
     private int RC_SIGN_IN = 0;   //request code
     private final int RC_SWEET_PERMISSIONS = 1337;
+    private MenuItem mMenuSign;
     private Context mContext;
 
     //keys
@@ -172,6 +176,8 @@ public class MainActivity extends AppCompatActivity{
         snapHelper.attachToRecyclerView(mForecastRecyclerView);
 //        setupRecyclerView(mForecastRecyclerView);
 
+        //TODO - Trip creation will be added in a future release.
+/*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.main_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,6 +186,7 @@ public class MainActivity extends AppCompatActivity{
                         .setAction("Action", null).show();
             }
         });
+*/
     }
 
     @Override
@@ -241,14 +248,18 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         mCurUser = mAuth.getCurrentUser();
         if(mCurUser == null){
-            //immediately try to sign the user in via FirebaseUI
-            FirebaseSignIn();
+            try {
+                //immediately try to sign the user in via FirebaseUI
+                FirebaseSignIn();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         else{
             Firestore_LoadData();
@@ -287,7 +298,7 @@ public class MainActivity extends AppCompatActivity{
         }
     }
     private void saveCoordsToSharedPrefs(double lat, double lon){
-        mSharedPreferences = getPreferences(MODE_PRIVATE);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(SHAREDPREFS_LAT, Double.toString(lat));
         editor.putString(SHAREDPREFS_LON, Double.toString(lon));
