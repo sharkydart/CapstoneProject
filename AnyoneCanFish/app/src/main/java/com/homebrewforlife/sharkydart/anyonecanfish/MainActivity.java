@@ -404,11 +404,10 @@ public class MainActivity extends AppCompatActivity{
                         + " UID: " + theCurUser.getUid());
                 if(theCurUser.getDisplayName() == null)
                     FirebaseUpdateUserInfo(theCurUser);   //just to set a name, if there is none
-                else {
-                    //Firestore_PrepUserInfo
-                    //sets the reference to the users' specific document
-                    mFS_User_document_ref = mFS_Store.collection(getString(R.string.db_users)).document(theCurUser.getUid());
-                }
+
+                //make a user account in the DB, and also a tacklebox
+                FirestoreAdds.addFS_user(mContext, new Fire_User(theCurUser), mFS_Store);
+                //mFS_User_document_ref = mFS_Store.collection(getString(R.string.db_users)).document(theCurUser.getUid());
             }
         }
         catch(NullPointerException np){
@@ -433,8 +432,6 @@ public class MainActivity extends AppCompatActivity{
                             Log.d("fart", "Name: " + theUser.getDisplayName()
                                     + " Email: " + theUser.getEmail()
                                     + " UID: " + theUser.getUid());
-
-                            FirestoreAdds.addFS_user(mContext, new Fire_User(theUser), mFS_Store);
                         }
                     }
                 });

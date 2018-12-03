@@ -22,15 +22,14 @@ public class FirestoreAdds {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d("fart", "User Account successfully created!");
-
                             //create user's first tacklebox - the uid will be the same as the user for this one
                             addFS_tacklebox(theContext,mFS_Store,freshUser,
                                     new Fire_TackleBox(
                                             null,
-                                            "My First tacklebox!",
+                                            "My Tacklebox!",
                                             "My Tackle",
                                             "",
-                                            null
+                                            freshUser.getUid()  //so that it only makes one tacklebox
                                     ));
                         }
                     })
@@ -48,11 +47,22 @@ public class FirestoreAdds {
     private static void addFS_tacklebox(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, final Fire_TackleBox fire_tackleBox) {
         try {
             //path: users/[user.uid]/TackleBoxes/[tacklebox.uid]
-            DocumentReference theNewBox = mFS_Store.collection(theContext.getString(R.string.db_users))
-                    .document(freshUser.getUid())
-                    .collection(theContext.getString(R.string.db_tackle_boxes))
-                    .document();
-            fire_tackleBox.setUid(theNewBox.getId());
+            DocumentReference theNewBox;
+            if(fire_tackleBox.getUid() != null && !fire_tackleBox.getUid().isEmpty()) {
+                //if the tacklebox has a uid already
+                theNewBox = mFS_Store.collection(theContext.getString(R.string.db_users))
+                        .document(freshUser.getUid())
+                        .collection(theContext.getString(R.string.db_tackle_boxes))
+                        .document(fire_tackleBox.getUid());
+            }else{
+                //if there is no uid, create a new tacklebox
+                theNewBox = mFS_Store.collection(theContext.getString(R.string.db_users))
+                        .document(freshUser.getUid())
+                        .collection(theContext.getString(R.string.db_tackle_boxes))
+                        .document();
+                fire_tackleBox.setUid(theNewBox.getId());
+            }
+
             theNewBox.set(fire_tackleBox, SetOptions.merge())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
