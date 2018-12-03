@@ -61,7 +61,7 @@
                 />
         </LinearLayout>-->
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvLures"
+            android:id="@+id/rvTrips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnWidth="90dp"
@@ -69,7 +69,7 @@
             android:horizontalSpacing="10dp"
             android:gravity="center"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            tools:listitem="@layout/rv_content_lures"
+            tools:listitem="@layout/rv_content_trips"
             />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

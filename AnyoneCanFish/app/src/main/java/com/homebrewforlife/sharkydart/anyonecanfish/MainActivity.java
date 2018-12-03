@@ -297,6 +297,7 @@ public class MainActivity extends AppCompatActivity{
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(theContext);
         String lat = mSharedPreferences.getString(SHAREDPREFS_LAT, null);
         String lon = mSharedPreferences.getString(SHAREDPREFS_LON, null);
+        Log.d("fart", "lat:" + lat + " lon:" + lon );
         GeoPoint coords;
         if(lat != null && lon != null)
             coords = new GeoPoint(Double.valueOf(lat), Double.valueOf(lon));
@@ -308,6 +309,7 @@ public class MainActivity extends AppCompatActivity{
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         String lat = mSharedPreferences.getString(SHAREDPREFS_LAT, null);
         String lon = mSharedPreferences.getString(SHAREDPREFS_LON, null);
+        Log.d("fart", "lat:" + lat + " lon:" + lon );
         GeoPoint coords;
         if(lat != null && lon != null)
             coords = new GeoPoint(Double.valueOf(lat), Double.valueOf(lon));

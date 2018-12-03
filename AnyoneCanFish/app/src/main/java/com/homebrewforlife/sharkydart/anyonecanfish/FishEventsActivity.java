@@ -106,6 +106,14 @@ public class FishEventsActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(FishingTripsActivity.FISHEVENT_ARRAYLIST, mFishEventArrayList);
+        outState.putParcelable(FishingTripsActivity.THE_TRIP, mInTrip);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mFishEventArrayList = savedInstanceState.getParcelableArrayList(FishingTripsActivity.FISHEVENT_ARRAYLIST);
+        mInTrip = savedInstanceState.getParcelable(FishingTripsActivity.THE_TRIP);
     }
 
     private void closeOnError() {

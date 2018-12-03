@@ -46,6 +46,7 @@ public class FishingTripsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        mContext = this;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fishingtrips_fab);
         fab.setOnClickListener(new View.OnClickListener() {
