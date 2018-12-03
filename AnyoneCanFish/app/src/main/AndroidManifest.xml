@@ -38,7 +38,9 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".MapsActivity">
+        <activity android:name=".MapsActivity"
+            android:launchMode="singleTop"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
@@ -74,6 +76,7 @@
         <activity
             android:name=".GameFishActivity"
             android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_game_fish"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -83,6 +86,7 @@
         </activity>
         <activity
             android:name=".FishingBasicsActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_fishing_basics"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -92,6 +96,7 @@
         </activity>
         <activity
             android:name=".FishingTripsActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_fishing_trips"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -110,6 +115,7 @@
         <!-- </activity> -->
         <activity
             android:name=".TackleBoxesActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_tackle_boxes"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -117,15 +123,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.homebrewforlife.sharkydart.anyonecanfish.MainActivity" />
         </activity>
-        <!-- <activity -->
-        <!-- android:name=".LuresActivity" -->
-        <!-- android:label="@string/title_activity_lures" -->
-        <!-- android:parentActivityName=".TackleBoxesActivity" -->
-        <!-- android:theme="@style/AppTheme.NoActionBar"> -->
-        <!-- <meta-data -->
-        <!-- android:name="android.support.PARENT_ACTIVITY" -->
-        <!-- android:value="com.homebrewforlife.sharkydart.anyonecanfish.TackleBoxesActivity" /> -->
-        <!-- </activity> -->
+         <activity
+             android:name=".LuresActivity"
+             android:launchMode="singleTop"
+             android:label="@string/title_activity_lures"
+             android:parentActivityName=".TackleBoxesActivity"
+             android:theme="@style/AppTheme.NoActionBar">
+             <meta-data
+                 android:name="android.support.PARENT_ACTIVITY"
+                 android:value="com.homebrewforlife.sharkydart.anyonecanfish.TackleBoxesActivity" />
+         </activity>
 
         <receiver android:name=".widget.FishingWidgetProvider">
             <intent-filter>
@@ -143,6 +150,7 @@
 
         <activity
             android:name=".BasicEquipment_Activity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_basic_equipment"
             android:parentActivityName=".FishingBasicsActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -152,6 +160,7 @@
         </activity>
         <activity
             android:name=".HowToFish_Activity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_how_to_fish_"
             android:parentActivityName=".FishingBasicsActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -161,6 +170,7 @@
         </activity>
         <activity
             android:name=".Maintenance_Activity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_maintenance_"
             android:parentActivityName=".FishingBasicsActivity"
             android:theme="@style/AppTheme.NoActionBar">

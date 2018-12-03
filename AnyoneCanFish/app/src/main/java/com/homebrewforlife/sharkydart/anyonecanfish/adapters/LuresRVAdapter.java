@@ -33,7 +33,7 @@ public class LuresRVAdapter extends RecyclerView.Adapter<LuresRVAdapter.ViewHold
     @Override @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_content_tackle_boxes, parent, false);
+                .inflate(R.layout.rv_content_lures, parent, false);
         return new ViewHolder(view);
     }
 

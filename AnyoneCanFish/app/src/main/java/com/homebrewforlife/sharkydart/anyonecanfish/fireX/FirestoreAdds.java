@@ -16,13 +16,12 @@ import com.homebrewforlife.sharkydart.anyonecanfish.models.*;
 public class FirestoreAdds {
     public static void addFS_user(final Context theContext, final Fire_User freshUser, final FirebaseFirestore mFS_Store){
         try {
-            DocumentReference newUser = mFS_Store.collection(theContext.getString(R.string.db_users)).document();
-            freshUser.setUid(newUser.getId());
+            DocumentReference newUser = mFS_Store.collection(theContext.getString(R.string.db_users)).document(freshUser.getUid());
             newUser.set(freshUser, SetOptions.merge())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d("fart", "DocumentSnapshot successfully written!");
+                            Log.d("fart", "User Account successfully created!");
 
                             //create user's first tacklebox - the uid will be the same as the user for this one
                             addFS_tacklebox(theContext,mFS_Store,freshUser,
@@ -38,7 +37,7 @@ public class FirestoreAdds {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.w("fart", "Error adding firestore USER", e);
+                            Log.w("fart", "Error adding the USER", e);
                         }
                     });
         }

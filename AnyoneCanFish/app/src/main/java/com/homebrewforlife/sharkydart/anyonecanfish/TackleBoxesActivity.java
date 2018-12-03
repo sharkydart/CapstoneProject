@@ -24,6 +24,7 @@ public class TackleBoxesActivity extends AppCompatActivity {
     TackleBoxesRVAdapter mTackleBoxRVAdapter;
     RecyclerView mTackleBoxRV;
     public static final String LURES_ARRAYLIST = "lures-array-list";
+    public static final String THE_TACKLEBOX = "this-is-a-string-for-the-tackleboxes";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,12 @@ public class TackleBoxesActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(MainActivity.TACKLE_BOXES_ARRAYLIST, mTackleBoxArrayList);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mTackleBoxArrayList = savedInstanceState.getParcelableArrayList(MainActivity.TACKLE_BOXES_ARRAYLIST);
     }
 
     private void closeOnError() {

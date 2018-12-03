@@ -43,6 +43,7 @@
     <string name="title_activity_game_fish">Game Fish of North America</string>
     <string name="title_activity_fishing_trips">Fishing Trips</string>
     <string name="title_activity_tackle_boxes">Tackle Boxes</string>
+    <string name="title_activity_lures">Lures</string>
     <string name="title_activity_basic_equipment">Basic Equipment</string>
     <string name="title_activity_how_to_fish_">How To Fish</string>
     <string name="title_activity_maintenance_">Maintenance</string>
@@ -51,7 +52,7 @@
     <string name="basics_whatyouneed">Basic Equipment</string>
     <string name="basics_howtofish">Mentor Someone</string>
     <string name="basics_rulesresources">U.S Fish and Wildlife Service</string>
-    <string name="usa_fish_and_wildlife_url">https://www.fws.gov/</string>
+    <string name="usa_fish_and_wildlife_url">https://www.fws.gov/offices/index.html</string>
     <string name="basics_maintenance">Maintenance</string>
 
     <string name="large_text_HowToFish">

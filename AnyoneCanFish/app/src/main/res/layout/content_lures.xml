@@ -16,8 +16,8 @@
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
         android:gravity="center"
-        app:layoutManager="android.support.v7.widget.GridLayoutManager"
-        tools:listitem="@layout/rv_content_tackle_boxes"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        tools:listitem="@layout/rv_content_lures"
         />
 
 </android.support.v4.widget.NestedScrollView>

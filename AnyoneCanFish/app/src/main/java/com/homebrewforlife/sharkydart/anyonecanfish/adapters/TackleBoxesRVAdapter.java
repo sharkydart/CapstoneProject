@@ -1,5 +1,7 @@
 package com.homebrewforlife.sharkydart.anyonecanfish.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -10,24 +12,47 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.homebrewforlife.sharkydart.anyonecanfish.BasicEquipment_Activity;
+import com.homebrewforlife.sharkydart.anyonecanfish.LuresActivity;
 import com.homebrewforlife.sharkydart.anyonecanfish.R;
+import com.homebrewforlife.sharkydart.anyonecanfish.TackleBoxesActivity;
+import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreStuff;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Lure;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class TackleBoxesRVAdapter extends RecyclerView.Adapter<TackleBoxesRVAdapter.ViewHolder> {
+    private Context mContext;
     private final ArrayList<Fire_TackleBox> mTackleBoxArrayList;
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Fire_TackleBox theBox = (Fire_TackleBox) view.getTag();
-            Log.d("fart", "clicked tacklebox: " + theBox.getUid());
+
+            Intent intent = new Intent(view.getContext(), LuresActivity.class);
+            intent.putExtra(TackleBoxesActivity.THE_TACKLEBOX, theBox);
+
+            ArrayList<Fire_Lure> theLures = new ArrayList<>();
+            FirebaseUser theuser = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseFirestore theFS = FirebaseFirestore.getInstance();
+            FirestoreStuff fss = new FirestoreStuff(view.getContext(), theuser, theFS);
+            fss.Firestore_Get_TackleBox_Lures(theBox.getUid(), theLures);
+            intent.putParcelableArrayListExtra(TackleBoxesActivity.LURES_ARRAYLIST, theLures);
+
+            view.getContext().startActivity(intent);
         }
     };
 
     public TackleBoxesRVAdapter(AppCompatActivity parent, ArrayList<Fire_TackleBox> items) {
         mTackleBoxArrayList = items;
+        mContext = parent;
     }
 
     @Override @NonNull
@@ -42,7 +67,7 @@ public class TackleBoxesRVAdapter extends RecyclerView.Adapter<TackleBoxesRVAdap
         holder.mName.setText(mTackleBoxArrayList.get(position).getName());
         holder.mDescription.setText(mTackleBoxArrayList.get(position).getDesc());
 
-        if(mTackleBoxArrayList.get(position).getImage_url() != null)
+        if(mTackleBoxArrayList.get(position).getImage_url() != null && !mTackleBoxArrayList.get(position).getImage_url().isEmpty())
             Picasso.get().load(mTackleBoxArrayList.get(position).getImage_url())
                     .into(holder.mTackleBoxPic);
         else

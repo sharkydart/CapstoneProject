@@ -71,7 +71,6 @@ public class GetSolunarDataTasks {
                         //attempting to get around certificate issue...
                         String response = dealWithInvalidCertificateIssue(theContext, solunarApiUrl);
 
-                        Log.i("fart", "Response From SolunarApi URL: " + response);
                         parseSolunarApiResponseJSON(theContext, response);
                     } catch (Exception e) {
                         e.printStackTrace();

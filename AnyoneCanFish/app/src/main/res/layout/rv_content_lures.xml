@@ -16,43 +16,73 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="bottom"
-            >
+            android:orientation="vertical">
+
             <ImageView
                 android:id="@+id/imgLurePic"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
+                android:layout_height="160dp"
                 android:contentDescription="@string/content_lure_image"
-                />
+                android:scaleType="centerCrop" />
+
             <View
                 android:id="@drawable/scrim"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/scrim"/>
+                android:background="@drawable/scrim" />
 
-            <TextView
-                android:id="@+id/tvName"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/adamina"
-                android:textColor="@color/paper_300"
-                android:textSize="24sp"
-                tools:text="Trusty and Rusty, but not Dusty"
-                />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvLureName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/adamina"
+                    android:textColor="@color/paper_300"
+                    android:textSize="24sp"
+                    tools:text="Lure Name" />
+
+                <TextView
+                    android:id="@+id/tvLureSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/adamina"
+                    android:textColor="@color/paper_300"
+                    android:textSize="14sp"
+                    tools:text="SIZE" />
+
+                <TextView
+                    android:id="@+id/tvLureType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/adamina"
+                    android:textColor="@color/paper_300"
+                    android:textSize="14sp"
+                    tools:text="TYPE" />
+            </LinearLayout>
         </FrameLayout>
 
         <TextView
-            android:id="@+id/tvDescription"
+            android:id="@+id/tvLureDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:textAppearance="?attr/textAppearanceListItem"
-            tools:text="lure information"/>
+            tools:text="Lure Description"/>
     </LinearLayout>
 
 </android.support.design.card.MaterialCardView>

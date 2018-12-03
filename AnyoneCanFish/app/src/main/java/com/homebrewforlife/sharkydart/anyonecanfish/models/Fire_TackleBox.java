@@ -51,9 +51,9 @@ public class Fire_TackleBox implements Parcelable{
         }
     };
 
-    public ArrayList<Fire_Lure> getTheLures() {
-        return theLures;
-    }
+//    public ArrayList<Fire_Lure> getTheLures() {
+//        return theLures;
+//    }
 
     public void setTheLures(ArrayList<Fire_Lure> theLures) {
         this.theLures = theLures;
@@ -90,6 +90,7 @@ public class Fire_TackleBox implements Parcelable{
     public void setUid(String uid) {
         this.uid = uid;
     }
+/*
 
     public String getQuickDescription() {
         StringBuilder builder = new StringBuilder();
@@ -108,4 +109,5 @@ public class Fire_TackleBox implements Parcelable{
 
         return builder.toString();
     }
+*/
 }

@@ -150,22 +150,6 @@ public class MainActivity extends AppCompatActivity{
         FirebaseFirestore.setLoggingEnabled(true);
         mAuth = FirebaseAuth.getInstance();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Make a new trip!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Toast.makeText(mContext, "Making a Trip...", Toast.LENGTH_SHORT).show();
-                                Log.i("fart", "clicked Snackbar");
-                            }
-                        }).show();
-                Log.i("fart", "clicked FAB");
-            }
-        });
-
         //verify location permissions and start getting location and weather data
         verifyLocationPermissions(false);
 
@@ -543,7 +527,7 @@ public class MainActivity extends AppCompatActivity{
     private class MainLocationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("fart", "[[Location]] Received Something...");
+            Log.d("fart", "[[Location]] Receiver Received Something...");
             String action = intent.getAction();
             if(LocationTasks.ACTION_FOUND_GPS_LOCATION.equals(action)){
                 double theLat, theLon;
@@ -573,14 +557,12 @@ public class MainActivity extends AppCompatActivity{
     private class MainWeatherFirstReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("fart", "[[Weather First]] Received Something...");
+            Log.d("fart", "[[Weather First]] Receiver Received Something...");
             String action = intent.getAction();
             if(WeatherInfoTasks.ACTION_FOUND_WEATHER_FORECAST_API.equals(action)){
                 String theWeatherAPIURL, theCity;
                 theWeatherAPIURL = intent.getStringExtra(WeatherInfoTasks.EXTRA_FORECAST_API_URL);
                 theCity = intent.getStringExtra(WeatherInfoTasks.EXTRA_CITY);
-                Log.d("fart","theWeatherAPIURL: " + theWeatherAPIURL);
-                Log.d("fart", "city: " + theCity);
 
                 saveForecastURLAndCityToSharedPrefs(theWeatherAPIURL, theCity);
                 startGettingForecastData(theWeatherAPIURL);
@@ -594,7 +576,7 @@ public class MainActivity extends AppCompatActivity{
     private class MainForecastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("fart", "[[Forecast API call]] Received Something...");
+            Log.d("fart", "[[Forecast API call]] Receiver Received Something...");
             String action = intent.getAction();
             if(GetForecastDataTasks.ACTION_FOUND_FORECAST_DATA.equals(action)){
                 mForecastPeriodsArrayList = intent.getParcelableArrayListExtra(GetForecastDataTasks.EXTRA_THE_FORECAST_DATA);
@@ -609,11 +591,10 @@ public class MainActivity extends AppCompatActivity{
     private class MainSolunarReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("fart", "[[Solunar API call]] Received Something...");
+            Log.d("fart", "[[Solunar API call]] Receiver Received Something...");
             String action = intent.getAction();
             if(GetSolunarDataTasks.ACTION_FOUND_SOLUNAR_DATA.equals(action)){
                 mSolunarDataObj = intent.getParcelableExtra(GetSolunarDataTasks.EXTRA_THE_SOLUNAR_DATA);
-                Log.d("fart", "solunar data: " + mSolunarDataObj.getQuickDescription());
                 setupRecyclerView(mForecastRecyclerView);
             }
             else{

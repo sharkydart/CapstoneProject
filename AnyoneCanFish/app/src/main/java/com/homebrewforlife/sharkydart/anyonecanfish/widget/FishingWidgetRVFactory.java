@@ -103,10 +103,7 @@ public class FishingWidgetRVFactory implements RemoteViewsService.RemoteViewsFac
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(theContext);
         String theForecastD = sharedPref.getString(MainActivity.RAW_FORECAST_DATA_SHAREDPREFS_CACHE, "A widget doesn't have a forecast.");
         String theSolunarD = sharedPref.getString(MainActivity.RAW_SOLUNAR_DATA_SHAREDPREFS_CACHE, "A widget doesn't have a sun or a moon.");
-
-        Log.d("fart", "theForecastD: " + theForecastD);
-        Log.d("fart", "theSolunarD: " + theSolunarD);
-
+        Log.i("fart", "widget got info from sharedprefs");
         myForecastObj = parseLocalWeatherForecastJSON(theForecastD);
         mySolunarObj = parseSolunarApiResponseJSON(theSolunarD);
     }

@@ -15,6 +15,10 @@ public class Fire_Lure implements Parcelable{
 
     public Fire_Lure(){}
 
+    public Fire_Lure(String name, String size, String type){
+
+    }
+
     public Fire_Lure(String uid, String name, String size, String type, String desc, String image_url, String hook_type, int hook_count) {
         this.uid = uid;
         this.name = name;

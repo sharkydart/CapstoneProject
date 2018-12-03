@@ -58,9 +58,9 @@ public class FishingBasicsActivity extends AppCompatActivity {
         findViewById(R.id.btnBasicEquipment).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), BasicEquipment_Activity.class);
+                Intent intent = new Intent(mContext, BasicEquipment_Activity.class);
                 intent.putParcelableArrayListExtra(BASIC_EQUIPMENT_ACTIVITY, mBasicInfoArrayList);
-                view.getContext().startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
         findViewById(R.id.btnHowToFish).setOnClickListener(new View.OnClickListener() {
