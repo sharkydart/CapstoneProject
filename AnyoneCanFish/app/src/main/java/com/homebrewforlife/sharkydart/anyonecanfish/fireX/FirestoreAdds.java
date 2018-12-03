@@ -13,6 +13,8 @@ import com.google.firebase.firestore.SetOptions;
 import com.homebrewforlife.sharkydart.anyonecanfish.R;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.*;
 
+import java.util.ArrayList;
+
 public class FirestoreAdds {
     public static void addFS_user(final Context theContext, final Fire_User freshUser, final FirebaseFirestore mFS_Store){
         try {
@@ -111,7 +113,10 @@ public class FirestoreAdds {
         }
     }
 
-    public static void addFS_trip(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, final Fire_Trip fire_trip) {
+    public static void addFS_trip(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, final Fire_Trip fire_trip){
+        addFS_trip(theContext,mFS_Store,freshUser,fire_trip, null);
+    }
+    public static void addFS_trip(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, final Fire_Trip fire_trip, final ArrayList<Fire_Trip> addNewTrip) {
         try {
             //path: users/[user.uid]/Trips/[trip.uid]
             mFS_Store.collection(theContext.getString(R.string.db_users))
@@ -123,6 +128,8 @@ public class FirestoreAdds {
                         public void onSuccess(DocumentReference documentReference) {
                             Log.d("fart", "DocumentSnapshot of trip written with ID: " + documentReference.getId());
                             fire_trip.setUid(documentReference.getId());
+                            if(addNewTrip != null)
+                                addNewTrip.add(fire_trip);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -137,7 +144,12 @@ public class FirestoreAdds {
         }
     }
 
-    public static void addFS_fishEvent(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, Fire_Trip theTrip, final Fire_FishEvent fire_fishEvent) {
+    public static void addFS_fishEvent(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, Fire_Trip theTrip, final Fire_FishEvent fire_fishEvent){
+        addFS_fishEvent(theContext, mFS_Store, freshUser, theTrip, fire_fishEvent, null);
+    }
+    public static void addFS_fishEvent(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, Fire_Trip theTrip, final Fire_FishEvent fire_fishEvent,
+                                       final ArrayList<Fire_FishEvent> addFishEvent
+    ) {
         try {
             CollectionReference whereToSaveFishEvent;
 
@@ -163,6 +175,8 @@ public class FirestoreAdds {
                         public void onSuccess(DocumentReference documentReference) {
                             Log.d("fart", "DocumentSnapshot of fish event written with ID: " + documentReference.getId());
                             fire_fishEvent.setUid(documentReference.getId());
+                            if(addFishEvent != null)
+                                addFishEvent.add(fire_fishEvent);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

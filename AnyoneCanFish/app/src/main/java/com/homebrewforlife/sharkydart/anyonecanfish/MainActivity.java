@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity{
         snapHelper.attachToRecyclerView(mForecastRecyclerView);
 //        setupRecyclerView(mForecastRecyclerView);
 
-/*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.main_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +180,6 @@ public class MainActivity extends AppCompatActivity{
                         .setAction("Action", null).show();
             }
         });
-*/
     }
 
     @Override
@@ -294,6 +292,17 @@ public class MainActivity extends AppCompatActivity{
         editor.putString(SHAREDPREFS_LAT, Double.toString(lat));
         editor.putString(SHAREDPREFS_LON, Double.toString(lon));
         editor.apply();
+    }
+    public static GeoPoint getCoordsFromSharedPrefs(Context theContext){
+        SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(theContext);
+        String lat = mSharedPreferences.getString(SHAREDPREFS_LAT, null);
+        String lon = mSharedPreferences.getString(SHAREDPREFS_LON, null);
+        GeoPoint coords;
+        if(lat != null && lon != null)
+            coords = new GeoPoint(Double.valueOf(lat), Double.valueOf(lon));
+        else
+            coords = null;
+        return coords;
     }
     private GeoPoint getCoordsFromSharedPrefs(){
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);

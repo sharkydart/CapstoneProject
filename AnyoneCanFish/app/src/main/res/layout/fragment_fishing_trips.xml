@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="9"
-                android:hint="@string/lure_hint_name"
+                android:hint="@string/trip_hint_name"
                 android:inputType="text" />
 
             <EditText
@@ -31,11 +31,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="12"
-                android:hint="@string/lure_hint_type"
+                android:hint="@string/trip_hint_desc"
                 android:inputType="text" />
         </LinearLayout>
 
-        <LinearLayout
+       <!-- <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -59,7 +59,7 @@
                 android:inputType="date"
                 android:autofillHints="@string/trip_hint_startDate"
                 />
-        </LinearLayout>
+        </LinearLayout>-->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvLures"
             android:layout_width="match_parent"

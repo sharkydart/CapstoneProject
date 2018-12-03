@@ -77,16 +77,12 @@ public class LuresActivity extends AppCompatActivity {
                             public void onClick(View view) {
                                 FirebaseFirestore mFS_Store = FirebaseFirestore.getInstance();
                                 FirebaseUser mCurUser = FirebaseAuth.getInstance().getCurrentUser();
-                                if(mCurUser != null) {
+                                if(mCurUser != null){
                                     /*
-                                    * uid,
                                       name,
                                       size,
                                       type,
                                       desc,
-                                      image_url,
-                                      hook_type,
-                                      hook_count
                                      */
                                     FirestoreAdds.addFS_lure(mContext, mFS_Store, new Fire_User(mCurUser), mInTacklebox, new Fire_Lure());
                                     Toast.makeText(mContext, "Making a User...", Toast.LENGTH_SHORT).show();
