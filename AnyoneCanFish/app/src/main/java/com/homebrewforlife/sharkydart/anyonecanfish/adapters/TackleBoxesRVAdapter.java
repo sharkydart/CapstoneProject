@@ -39,13 +39,6 @@ public class TackleBoxesRVAdapter extends RecyclerView.Adapter<TackleBoxesRVAdap
             Intent intent = new Intent(view.getContext(), LuresActivity.class);
             intent.putExtra(TackleBoxesActivity.THE_TACKLEBOX, theBox);
 
-            ArrayList<Fire_Lure> theLures = new ArrayList<>();
-            FirebaseUser theuser = FirebaseAuth.getInstance().getCurrentUser();
-            FirebaseFirestore theFS = FirebaseFirestore.getInstance();
-            FirestoreStuff fss = new FirestoreStuff(view.getContext(), theuser, theFS);
-            fss.Firestore_Get_TackleBox_Lures(theBox.getUid(), theLures);
-            intent.putParcelableArrayListExtra(TackleBoxesActivity.LURES_ARRAYLIST, theLures);
-
             view.getContext().startActivity(intent);
         }
     };

@@ -100,7 +100,7 @@ public class FishEventsActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mLuresRVAdapter = new LuresRVAdapter(this, mLuresArrayList);
+        mLuresRVAdapter = new LuresRVAdapter(this, mLuresArrayList, mInTacklebox);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mLuresRVAdapter);
     }

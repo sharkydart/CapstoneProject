@@ -84,7 +84,11 @@ public class FirestoreAdds {
         }
     }
 
-    public static void addFS_lure(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, final Fire_TackleBox fire_tackleBox, final Fire_Lure fire_lure) {
+    public static void addFS_lure(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, final Fire_TackleBox fire_tackleBox, final Fire_Lure fire_lure){
+        addFS_lure(theContext, mFS_Store, freshUser, fire_tackleBox, fire_lure, null);
+    }
+    public static void addFS_lure(Context theContext, FirebaseFirestore mFS_Store, Fire_User freshUser, final Fire_TackleBox fire_tackleBox, final Fire_Lure fire_lure,
+                                  final ArrayList<Fire_Lure> addLure) {
         try {
             //path: users/[user.uid]/TackleBoxes/[tacklebox.uid]/Lures/{lure.uid}
             DocumentReference theLure = mFS_Store.collection(theContext.getString(R.string.db_users))
@@ -99,6 +103,8 @@ public class FirestoreAdds {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d("fart", "Lure successfully created!" + fire_lure.getUid());
+                            if(addLure != null)
+                                addLure.add(fire_lure);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

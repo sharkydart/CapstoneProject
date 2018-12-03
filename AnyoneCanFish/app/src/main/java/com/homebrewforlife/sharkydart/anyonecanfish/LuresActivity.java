@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.homebrewforlife.sharkydart.anyonecanfish.adapters.LuresRVAdapter;
 import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreAdds;
+import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreStuff;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Lure;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_User;
@@ -49,10 +51,11 @@ public class LuresActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        if(savedInstanceState == null){
+        if(savedInstanceState == null)
             mLuresArrayList = new ArrayList<>();
-        }else if(savedInstanceState.containsKey(TackleBoxesActivity.LURES_ARRAYLIST)){
+        else if(savedInstanceState.containsKey(TackleBoxesActivity.LURES_ARRAYLIST) && savedInstanceState.containsKey(TackleBoxesActivity.THE_TACKLEBOX)){
             mLuresArrayList = savedInstanceState.getParcelableArrayList(TackleBoxesActivity.LURES_ARRAYLIST);
+            mInTacklebox = savedInstanceState.getParcelable(TackleBoxesActivity.THE_TACKLEBOX);
         }
 
         Intent intent = getIntent();
@@ -60,7 +63,7 @@ public class LuresActivity extends AppCompatActivity {
             closeOnError();
         }else {
             mInTacklebox = intent.getParcelableExtra(TackleBoxesActivity.THE_TACKLEBOX);
-            mLuresArrayList = intent.getParcelableArrayListExtra(TackleBoxesActivity.LURES_ARRAYLIST);
+            loadLuresFromFirebase();
         }
 
         mLuresRV = findViewById(R.id.rvLures);
@@ -78,14 +81,15 @@ public class LuresActivity extends AppCompatActivity {
                                 FirebaseFirestore mFS_Store = FirebaseFirestore.getInstance();
                                 FirebaseUser mCurUser = FirebaseAuth.getInstance().getCurrentUser();
                                 if(mCurUser != null){
-                                    /*
-                                      name,
-                                      size,
-                                      type,
-                                      desc,
-                                     */
-                                    FirestoreAdds.addFS_lure(mContext, mFS_Store, new Fire_User(mCurUser), mInTacklebox, new Fire_Lure());
-                                    Toast.makeText(mContext, "Making a User...", Toast.LENGTH_SHORT).show();
+                                    //name, size, type, desc
+                                    Fire_Lure fire_lure = new Fire_Lure(
+                                        ((EditText)findViewById(R.id.etName)).getText().toString(),
+                                        ((EditText)findViewById(R.id.etDesc)).getText().toString(),
+                                        ((EditText)findViewById(R.id.etType)).getText().toString(),
+                                        ((EditText)findViewById(R.id.etSize)).getText().toString()
+                                    );
+                                    FirestoreAdds.addFS_lure(mContext, mFS_Store, new Fire_User(mCurUser), mInTacklebox, fire_lure, mLuresArrayList);
+                                    Toast.makeText(mContext, "Making a Lure...", Toast.LENGTH_SHORT).show();
                                 }
                                 else
                                     Toast.makeText(mContext, "mCurUser is null", Toast.LENGTH_LONG).show();
@@ -96,8 +100,16 @@ public class LuresActivity extends AppCompatActivity {
         });
     }
 
+    private void loadLuresFromFirebase(){
+        ArrayList<Fire_Lure> theLures = new ArrayList<>();
+        FirebaseUser theuser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore theFS = FirebaseFirestore.getInstance();
+        FirestoreStuff fss = new FirestoreStuff(mContext, theuser, theFS);
+        fss.Firestore_Get_TackleBox_Lures(mInTacklebox.getUid(), theLures);
+    }
+
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mLuresRVAdapter = new LuresRVAdapter(this, mLuresArrayList);
+        mLuresRVAdapter = new LuresRVAdapter(this, mLuresArrayList, mInTacklebox);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mLuresRVAdapter);
     }
@@ -106,11 +118,19 @@ public class LuresActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(TackleBoxesActivity.LURES_ARRAYLIST, mLuresArrayList);
+        outState.putParcelable(TackleBoxesActivity.THE_TACKLEBOX, mInTacklebox);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mLuresArrayList = savedInstanceState.getParcelableArrayList(TackleBoxesActivity.LURES_ARRAYLIST);
+        mInTacklebox = savedInstanceState.getParcelable(TackleBoxesActivity.THE_TACKLEBOX);
     }
 
     private void closeOnError() {
         finish();
-        Toast.makeText(this, "Can't find Game Fish", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Can't find lures", Toast.LENGTH_SHORT).show();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
