@@ -19,26 +19,28 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.homebrewforlife.sharkydart.anyonecanfish.adapters.LuresRVAdapter;
+import com.homebrewforlife.sharkydart.anyonecanfish.adapters.FishEventsRVAdapter;
 import com.homebrewforlife.sharkydart.anyonecanfish.fireX.FirestoreAdds;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_FishEvent;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Lure;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_TackleBox;
+import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_Trip;
 import com.homebrewforlife.sharkydart.anyonecanfish.models.Fire_User;
 
 import java.util.ArrayList;
 
 public class FishEventsActivity extends AppCompatActivity {
 
-    ArrayList<Fire_Lure> mLuresArrayList;
-    LuresRVAdapter mLuresRVAdapter;
-    RecyclerView mLuresRV;
+    ArrayList<Fire_FishEvent> mFishEventArrayList;
+    FishEventsRVAdapter mFishEventRVAdapter;
+    RecyclerView mFishEventRV;
     private Context mContext;
-    Fire_TackleBox mInTacklebox;
+    Fire_Trip mInTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lures);
+        setContentView(R.layout.activity_fish_events);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mContext = this;
@@ -49,45 +51,40 @@ public class FishEventsActivity extends AppCompatActivity {
         }
 
         if(savedInstanceState == null){
-            mLuresArrayList = new ArrayList<>();
-        }else if(savedInstanceState.containsKey(TackleBoxesActivity.LURES_ARRAYLIST)){
-            mLuresArrayList = savedInstanceState.getParcelableArrayList(TackleBoxesActivity.LURES_ARRAYLIST);
+            mFishEventArrayList = new ArrayList<>();
+        }else if(savedInstanceState.containsKey(FishingTripsActivity.FISHEVENT_ARRAYLIST)){
+            mFishEventArrayList = savedInstanceState.getParcelableArrayList(FishingTripsActivity.FISHEVENT_ARRAYLIST);
         }
 
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
         }else {
-            mInTacklebox = intent.getParcelableExtra(TackleBoxesActivity.THE_TACKLEBOX);
-            mLuresArrayList = intent.getParcelableArrayListExtra(TackleBoxesActivity.LURES_ARRAYLIST);
+            mInTrip = intent.getParcelableExtra(FishingTripsActivity.THE_TRIP);
+            mFishEventArrayList = intent.getParcelableArrayListExtra(FishingTripsActivity.FISHEVENT_ARRAYLIST);
         }
 
-        mLuresRV = findViewById(R.id.rvLures);
-        assert mLuresRV != null;
-        setupRecyclerView(mLuresRV);
+        mFishEventRV = findViewById(R.id.rvFishEvents);
+        assert mFishEventRV != null;
+        setupRecyclerView(mFishEventRV);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.lures_fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fishevents_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Add a lure!", Snackbar.LENGTH_LONG)
-                        .setAction("Add lure", new View.OnClickListener() {
+                Snackbar.make(view, "Add a fish event!", Snackbar.LENGTH_LONG)
+                        .setAction("Add fish event", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 FirebaseFirestore mFS_Store = FirebaseFirestore.getInstance();
                                 FirebaseUser mCurUser = FirebaseAuth.getInstance().getCurrentUser();
                                 if(mCurUser != null) {
                                     /*
-                                    * uid,
-                                      name,
-                                      size,
-                                      type,
-                                      desc,
-                                      image_url,
-                                      hook_type,
-                                      hook_count
+                                    species
+                                    released
+                                    desc
                                      */
-                                    FirestoreAdds.addFS_lure(mContext, mFS_Store, new Fire_User(mCurUser), mInTacklebox, new Fire_Lure());
+//                                    FirestoreAdds.addFS_fishEvent(mContext, mFS_Store, new Fire_User(mCurUser), mInTrip, );
                                     Toast.makeText(mContext, "Making a User...", Toast.LENGTH_SHORT).show();
                                 }
                                 else
@@ -100,20 +97,20 @@ public class FishEventsActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mLuresRVAdapter = new LuresRVAdapter(this, mLuresArrayList, mInTacklebox);
+        mFishEventRVAdapter = new FishEventsRVAdapter(this, mFishEventArrayList, mInTrip);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(mLuresRVAdapter);
+        recyclerView.setAdapter(mFishEventRVAdapter);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(TackleBoxesActivity.LURES_ARRAYLIST, mLuresArrayList);
+        outState.putParcelableArrayList(FishingTripsActivity.FISHEVENT_ARRAYLIST, mFishEventArrayList);
     }
 
     private void closeOnError() {
         finish();
-        Toast.makeText(this, "Can't find Game Fish", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Can't find trip and events", Toast.LENGTH_SHORT).show();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

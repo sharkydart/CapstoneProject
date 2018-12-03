@@ -96,6 +96,7 @@
         </activity>
         <activity
             android:name=".FishingTripsActivity"
+            android:windowSoftInputMode="stateUnchanged"
             android:launchMode="singleTop"
             android:label="@string/title_activity_fishing_trips"
             android:parentActivityName=".MainActivity"
@@ -104,15 +105,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.homebrewforlife.sharkydart.anyonecanfish.MainActivity" />
         </activity>
-        <!-- <activity -->
-        <!-- android:name=".FishEventsActivity" -->
-        <!-- android:label="@string/title_activity_fish_events" -->
-        <!-- android:parentActivityName=".FishingTripsActivity" -->
-        <!-- android:theme="@style/AppTheme.NoActionBar"> -->
-        <!-- <meta-data -->
-        <!-- android:name="android.support.PARENT_ACTIVITY" -->
-        <!-- android:value="com.homebrewforlife.sharkydart.anyonecanfish.FishingTripsActivity" /> -->
-        <!-- </activity> -->
+        <activity
+            android:name=".FishEventsActivity"
+            android:windowSoftInputMode="stateUnchanged"
+            android:label="@string/title_activity_fish_events"
+            android:parentActivityName=".FishingTripsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.homebrewforlife.sharkydart.anyonecanfish.FishingTripsActivity" />
+        </activity>
         <activity
             android:name=".TackleBoxesActivity"
             android:launchMode="singleTop"
@@ -125,6 +127,7 @@
         </activity>
          <activity
              android:name=".LuresActivity"
+             android:windowSoftInputMode="stateUnchanged"
              android:launchMode="singleTop"
              android:label="@string/title_activity_lures"
              android:parentActivityName=".TackleBoxesActivity"

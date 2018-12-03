@@ -30,7 +30,11 @@ import static com.homebrewforlife.sharkydart.anyonecanfish.MainActivity.SHAREDPR
 
 public class FishingTripsActivity extends AppCompatActivity {
 
+    public static final String FISHEVENT_ARRAYLIST = "homebrew-sharkydart-fishing-event";
+    public static final String THE_TRIP = "homebrew-sharkydart-fishing-trip";
+
     private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

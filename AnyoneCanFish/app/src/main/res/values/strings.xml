@@ -48,6 +48,7 @@
     <string name="title_activity_how_to_fish_">How To Fish</string>
     <string name="title_activity_maintenance_">Maintenance</string>
     <string name="title_activity_maps">Anyone Can Fish Map</string>
+    <string name="title_activity_fish_events">Fish Events</string>
 
     <string name="basics_whatyouneed">Basic Equipment</string>
     <string name="basics_howtofish">Mentor Someone</string>
@@ -72,18 +73,9 @@
     <string name="fishevent_hint_date">Date</string>
 
     <string name="large_text_HowToFish">
-        "Material is the metaphor.\n\n"
+        "The only wrong way to fish is keeping more than you need.\n\n"
 
-        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
-        "technologically advanced and open to imagination and magic.\n"
-        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
-        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "flexibility of the material creates new affordances that supercede those in the physical "
-        "world, without breaking the rules of physics.\n"
-        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
-        "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "seams, divides space, and indicates moving parts.\n\n"
+        ".\n\n"
     </string>
     <string name="large_text_basic_equipment">
         "Using the right tool makes any job easier.\n\n"
