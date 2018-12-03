@@ -8,4 +8,6 @@
     tools:context=".FishingTripsActivity"
     tools:showIn="@layout/activity_fishing_trips">
 
+    <include layout="@layout/fragment_fishing_trips"/>
+
 </android.support.constraint.ConstraintLayout>

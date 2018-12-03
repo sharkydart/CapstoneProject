@@ -171,6 +171,17 @@ public class MainActivity extends AppCompatActivity{
 //        mForecastRecyclerView.setLayoutManager(layoutManager);
         snapHelper.attachToRecyclerView(mForecastRecyclerView);
 //        setupRecyclerView(mForecastRecyclerView);
+
+/*
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.main_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Create a trip", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+*/
     }
 
     @Override

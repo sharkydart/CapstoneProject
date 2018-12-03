@@ -55,6 +55,22 @@
     <string name="usa_fish_and_wildlife_url">https://www.fws.gov/offices/index.html</string>
     <string name="basics_maintenance">Maintenance</string>
 
+    <string name="lure_hint_name">Name</string>
+    <string name="lure_hint_size">Size</string>
+    <string name="lure_hint_desc">Description</string>
+    <string name="lure_hint_type">Type</string>
+
+    <string name="trip_hint_name">Name</string>
+    <string name="trip_hint_desc">Description</string>
+    <string name="trip_hint_startDate">Start</string>
+    <string name="trip_hint_endDate">End</string>
+    <string name="trip_hint_gps">Use GPS?</string>
+
+    <string name="fishevent_hint_species">Species</string>
+    <string name="fishevent_hint_released">Released?</string>
+    <string name="fishevent_hint_desc">Description</string>
+    <string name="fishevent_hint_date">Date</string>
+
     <string name="large_text_HowToFish">
         "Material is the metaphor.\n\n"
 

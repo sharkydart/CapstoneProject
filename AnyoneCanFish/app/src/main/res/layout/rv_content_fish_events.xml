@@ -32,49 +32,59 @@
                 android:layout_height="160dp"
                 android:background="@drawable/scrim" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvFishEventSpecies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/adamina"
+                    android:textColor="@color/paper_300"
+                    android:textSize="24sp"
+                    tools:text="Fish Species" />
+
+                <TextView
+                    android:id="@+id/tvFishEventDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:ems="3"
+                    android:fontFamily="@font/adamina"
+                    android:textColor="@color/paper_300"
+                    android:textSize="14sp"
+                    tools:text="SIZE" />
+
+            </LinearLayout>
             <TextView
-                android:id="@+id/tvLureSize"
+                android:id="@+id/tvFishEventDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
                 android:layout_marginStart="8dp"
+                android:ems="3"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/adamina"
                 android:textColor="@color/paper_300"
                 android:textSize="14sp"
-                tools:text="SIZE" />
-
-            <TextView
-                android:id="@+id/tvLureType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/adamina"
-                android:textColor="@color/paper_300"
-                android:textSize="14sp"
-                tools:text="TYPE" />
-            <TextView
-                android:id="@+id/tvLureName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|start"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/adamina"
-                android:textColor="@color/paper_300"
-                android:textSize="24sp"
-                tools:text="Lure Name" />
+                tools:text="Date" />
         </FrameLayout>
 
         <TextView
-            android:id="@+id/tvLureDescription"
+            android:id="@+id/tvFishEventDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:textAppearance="?attr/textAppearanceListItem"
-            tools:text="Lure Description"/>
+            tools:text="Event Description"/>
     </LinearLayout>
 
 </android.support.design.card.MaterialCardView>
